@@ -17,7 +17,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/2021/09/30/Redis-%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/1.png">
 <meta property="article:published_time" content="2021-09-29T17:05:17.000Z">
-<meta property="article:modified_time" content="2021-09-30T09:24:45.211Z">
+<meta property="article:modified_time" content="2021-09-30T09:33:17.847Z">
 <meta property="article:author" content="nowinkey">
 <meta property="article:tag" content="NOTE">
 <meta property="article:tag" content="DB">
@@ -204,6 +204,27 @@
 </blockquote>
 <span id="more"></span>
 
+
+
+<table>
+<thead>
+<tr>
+<th>header 1</th>
+<th>header 2</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>row 1 col 1</td>
+<td>row 1 col 2</td>
+</tr>
+<tr>
+<td>row 2 col 1</td>
+<td>row 2 col 2</td>
+</tr>
+</tbody></table>
+<p>header1 | header2</p>
+<p> — | — </p>
+<p> row1 col 1 |row 1 col 2 </p>
 <h3 id="1、缓存"><a href="#1、缓存" class="headerlink" title="1、缓存"></a>1、缓存</h3><h4 id="1-String-数据类型"><a href="#1-String-数据类型" class="headerlink" title="1) String 数据类型"></a>1) String 数据类型</h4><p>Redis  中的所有数据都是字符串。命令不区分大小写，key是区分大小写的。</p>
 <p>Redis 是单线程的。Redis 中不适合保存内容大的数据。</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">set k v --&gt;添加</span><br><span class="line">get k   --&gt;获取</span><br><span class="line">del k   --&gt;删除</span><br><span class="line">key *   --&gt;查询所有key</span><br></pre></td></tr></table></figure>
