@@ -6,16 +6,20 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://example.com">
-  <title>Archives: 2021 | nowinkey的小棉袄</title>
+  <title>缓存击穿的解决方案 | nowinkey的小棉袄</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="这个人很懒，什么也没留下。">
-<meta property="og:type" content="website">
-<meta property="og:title" content="nowinkey的小棉袄">
-<meta property="og:url" content="http://example.com/archives/2021/index.html">
+  <meta name="description" content="缓存击穿：请求的数据不在缓存中，请求到数据库（数据库中存在该数据）。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="缓存击穿的解决方案">
+<meta property="og:url" content="http://example.com/2021/10/01/%E7%BC%93%E5%AD%98%E5%87%BB%E7%A9%BF%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/index.html">
 <meta property="og:site_name" content="nowinkey的小棉袄">
-<meta property="og:description" content="这个人很懒，什么也没留下。">
+<meta property="og:description" content="缓存击穿：请求的数据不在缓存中，请求到数据库（数据库中存在该数据）。">
 <meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-10-01T15:42:52.000Z">
+<meta property="article:modified_time" content="2021-10-01T15:43:32.188Z">
 <meta property="article:author" content="nowinkey">
+<meta property="article:tag" content="NOTE">
+<meta property="article:tag" content="CACHE">
 <meta name="twitter:card" content="summary">
   
     <link rel="alternative" href="/atom.xml" title="nowinkey的小棉袄" type="application/atom+xml">
@@ -155,38 +159,131 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
+            <article id="post-缓存击穿的解决方案" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
   
+    <h1 class="article-title" itemprop="name">
+      缓存击穿的解决方案
+    </h1>
   
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2021" class="archive-year">2021</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2021/10/01/%E7%BC%93%E5%AD%98%E5%87%BB%E7%A9%BF%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/" class="archive-article-date">
+
+		<!--显示阅读次数-->
+		
+		  <br/>
+		  <a class="cloud-tie-join-count" href="javascript:void(0);" style="color:gray;font-size:14px;">
+		  <span class="icon-sort"></span>
+		  <span id="busuanzi_container_page_pv" style="color:#ef7522;font-size:14px;">
+			阅读数: <span id="busuanzi_value_page_pv"></span>次 &nbsp;&nbsp;
+		  </span>
+		  </a>
+		
+		<!--显示阅读次数完毕-->
+        
+        <a href="/2021/10/01/%E7%BC%93%E5%AD%98%E5%87%BB%E7%A9%BF%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/" class="archive-article-date">
   	<time datetime="2021-10-01T15:42:52.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-10-01</time>
 </a>
 
 
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2021/10/01/%E7%BC%93%E5%AD%98%E5%87%BB%E7%A9%BF%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/">缓存击穿的解决方案</a>
-    </h1>
-  
+        <!-- 不蒜子统计 -->
+        <span id="busuanzi_container_page_pv" style='display:none' class="archive-article-date">
+              <i class="icon-smile icon"></i> 阅读数：<span id="busuanzi_value_page_pv"></span>次
+        </span>
 
-        <div class="article-info info-on-right">
-          
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <blockquote>
+<p>缓存击穿：请求的数据不在缓存中，请求到数据库（数据库中存在该数据）。</p>
+</blockquote>
+<span id="more"></span>
+
+<h3 id="一、什么样的数据适合缓存？"><a href="#一、什么样的数据适合缓存？" class="headerlink" title="一、什么样的数据适合缓存？"></a>一、什么样的数据适合缓存？</h3><p>分析一个数据是否适合缓存，我们要从访问频率、读写频率、数据一致性等要求去分析。</p>
+<ul>
+<li>数据访问频率<ul>
+<li>高</li>
+</ul>
+</li>
+<li>数据读写比例<ul>
+<li>读多写少</li>
+</ul>
+</li>
+<li>数据一致性<ul>
+<li>一致性要求低</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="二、什么是缓存击穿"><a href="#二、什么是缓存击穿" class="headerlink" title="二、什么是缓存击穿"></a>二、什么是缓存击穿</h3><blockquote>
+<p>在高并发下，多线程同时查询同一个资源，如果缓存中没有这个资源，那么这些线程都会去数据库查找，对数据库造成极大压力，缓存失去存在的意义。</p>
+</blockquote>
+<hr>
+<h3 id="三、缓存击穿的解决方案"><a href="#三、缓存击穿的解决方案" class="headerlink" title="三、缓存击穿的解决方案"></a>三、缓存击穿的解决方案</h3><h4 id="1、方案一：后台刷新"><a href="#1、方案一：后台刷新" class="headerlink" title="1、方案一：后台刷新"></a>1、方案一：后台刷新</h4><p>后台定义一个 job（定时任务）专门主动更新缓存数据。<br>比如：一个缓存数据的过期时间是30min，那么 job 每隔29min定时刷新数据（将从数据库中查到的数据更新到缓存。）</p>
+<ul>
+<li>这种方案比较容易理解，但是会增加系统复杂度。比较适合那些 key 相对固定，cache 粒度较大的业务，key 比较分散的则不太合适，实现起来比较复杂。</li>
+</ul>
+<h4 id="2、方案二：检查更新"><a href="#2、方案二：检查更新" class="headerlink" title="2、方案二：检查更新"></a>2、方案二：检查更新</h4><p>将缓存 key 的过期时间（绝对时间）一起保存到缓存中（可以拼接，可以添加新字段，可以采用单独的 key 保存）。在每次执行 get 操作后，都将 get 出来的缓存过期时间与当前系统时间做一个对比，如果缓存过期时间 - 当前系统时间 &lt;= 1分钟（自定义），则主动更新缓存，这样就能保证缓存中的数据始终是最新的（同方案一，数据不过期）。</p>
+<ul>
+<li>这种方案在特殊情况下也会出现问题。假设缓存过期时间的最后1分钟（同上自定义）没有 get 请求过来，则该数据还是会被删除掉，之后如果有大量的 get 请求还是会增大数据库的压力。</li>
+</ul>
+<h4 id="3、方案三：分级缓存"><a href="#3、方案三：分级缓存" class="headerlink" title="3、方案三：分级缓存"></a>3、方案三：分级缓存</h4><p>采用 L1（一级缓存） 和 L2（二级缓存）缓存方式，L1 缓存失效时间短，L2 缓存失效时间长。请求优先从 L1 缓存获取数据，如果 L1 缓存未命中则加锁，只有一个线程能获取到锁，该持锁线程再从数据库中读取数据并将数据再更新到 L1 和 L2 缓存中，而其他线程依旧从 L2 缓存获取数据并返回。</p>
+<ul>
+<li>这种方式，主要是通过缓存失效并结合锁机制实现。所以，当数据更新时，只能淘汰 L1 缓存，不能同时将 L1 和 L2 中的缓存同时淘汰。L2 缓存中可能会出现脏数据（未更新或删除的数据，错误或无意义的数据），需要业务能够容忍这种短时间的不一致。而且，这种方案可能会造成额外的缓存空间浪费。</li>
+</ul>
+<h4 id="4、方案四：加锁"><a href="#4、方案四：加锁" class="headerlink" title="4、方案四：加锁"></a>4、方案四：加锁</h4><h5 id="1、在获取数据的方法上加锁（synchronized）"><a href="#1、在获取数据的方法上加锁（synchronized）" class="headerlink" title="1、在获取数据的方法上加锁（synchronized）"></a>1、在获取数据的方法上加锁（synchronized）</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">public synchronized List&lt;String&gt; getData01() &#123;</span><br><span class="line">    List&lt;String&gt; result = new ArrayList&lt;String&gt;();</span><br><span class="line">    // 从缓存中读取数据</span><br><span class="line">    result = getDataFromCache();</span><br><span class="line">    if (result.isEmpty()) &#123;</span><br><span class="line">        // 从数据库查询数据</span><br><span class="line">        result = getDataFromDB();</span><br><span class="line">        // 将查询的数据写入缓存</span><br><span class="line">        setDataToCache(result);</span><br><span class="line">    &#125;</span><br><span class="line">    return result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>注：这种方式确实可以防止缓存失效时大量请求打到数据库，但是缓存没有失效的时候，在从缓存中拿数据时需要排队取锁，这必然会大大的降低系统的吞吐量。</li>
+</ul>
+<h5 id="2、在请求打到数据库之前加锁"><a href="#2、在请求打到数据库之前加锁" class="headerlink" title="2、在请求打到数据库之前加锁"></a>2、在请求打到数据库之前加锁</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">static Object lock = new Object();</span><br><span class="line"></span><br><span class="line">public List&lt;String&gt; getData02() &#123;</span><br><span class="line">    List&lt;String&gt; result = new ArrayList&lt;String&gt;();</span><br><span class="line">    // 从缓存读取数据</span><br><span class="line">    result = getDataFromCache();</span><br><span class="line">    if (result.isEmpty()) &#123;</span><br><span class="line">        synchronized(lock) &#123;</span><br><span class="line">            // 从数据库查询数据</span><br><span class="line">            result = getDataFromDB();</span><br><span class="line">            // 将查询的数据写入缓存</span><br><span class="line">            setDataToCache(result);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>这个方法在缓存命中的时候，系统的吞吐量不会受影响，但是当缓存失效时，请求还是会打到数据库，只不过不是高并发而是阻塞而已，但是，这样会造成用户体验不佳，并且还会给数据库带来额外压力。</li>
+</ul>
+<h5 id="3、双重检查锁（Double-Check-Lock）"><a href="#3、双重检查锁（Double-Check-Lock）" class="headerlink" title="3、双重检查锁（Double Check Lock）"></a>3、双重检查锁（Double Check Lock）</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">static Object lock = new Object();</span><br><span class="line"></span><br><span class="line">public List&lt;String&gt; getData03() &#123;</span><br><span class="line">    List&lt;String&gt; result = new ArrayList&lt;String&gt;();</span><br><span class="line">    // 从缓存中读取数据</span><br><span class="line">    result = getDataFromCache();</span><br><span class="line">    if (result.isEmpty()) &#123;</span><br><span class="line">        synchronized(lock) &#123;</span><br><span class="line">            // 双重判断，第二个以及之后的请求不必去找数据库，直接命中缓存</span><br><span class="line">            // 查询缓存</span><br><span class="line">            result = getDataFromCache();</span><br><span class="line">            if (result.isEmpty()) &#123;</span><br><span class="line">                // 从数据库查询数据</span><br><span class="line">                result = getDataFrmoDB();</span><br><span class="line">                // 将查询到的数据写入缓存</span><br><span class="line">                setDataToCache(result);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>双重判断虽然可以阻止高并发打到数据库，但是第二个以及之后的请求在未命中缓存之后（第一个result.isEmpty()），还是在排队等锁，然后才能获取到已更新的缓存数据。比如 30 个请求一起并发过来，在双重判断时，第一个请求去数据库查询并更新缓存数据，剩下的 29 个请求则是依次排队去缓存中取数据，请求排在后面的这 29 个用户体验不好。</li>
+</ul>
+<h5 id="4、"><a href="#4、" class="headerlink" title="4、"></a>4、</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">static Lock reenLock = new ReentrantLock();</span><br><span class="line"></span><br><span class="line">public List&lt;String&gt; getData04() &#123;</span><br><span class="line">    List&lt;String&gt; result = new ArrayList&lt;String&gt;();</span><br><span class="line">    // 从缓存读取数据</span><br><span class="line">    result = getDataFromCache();</span><br><span class="line">    if (result.isEmpty()) &#123;</span><br><span class="line">        if (reenLock.tryLock()) &#123;</span><br><span class="line">            try &#123;</span><br><span class="line">                System.out.println(&quot;我拿到锁了，从DB获取数据库后写入缓存&quot;);</span><br><span class="line">                // 从数据库查询数据</span><br><span class="line">                result = getDataFromDB();</span><br><span class="line">                // 将查询到的数据写入缓存</span><br><span class="line">                setDataToCache(result);</span><br><span class="line">            &#125; finally &#123;</span><br><span class="line">                reenLock.unlock(); // 释放锁</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            result = getDataFromCache(); // 先查一下缓存</span><br><span class="line">            if (result.isEmpty()) &#123;</span><br><span class="line">                System.out.println(&quot;我没拿到锁，缓存也没数据，先小憩一下&quot;);</span><br><span class="line">                Thread.sleep(100); // 小憩一会</span><br><span class="line">                return getData04(); // 重试</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>最后使用互斥锁的方式来实现，可以有效避免前面的几种问题。</li>
+</ul>
+<p><strong>当然，在实际的分布式场景，我们还可以使用 redis、tair、zookeeper 等提供的分布式锁来实现。但是我们的并发量如果只有几千的话，就大可不必。</strong></p>
+
+      
+
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
+        </div>
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
@@ -202,264 +299,119 @@
 		</ul>
 	</div>
 
-          
+      
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://example.com/2021/10/01/%E7%BC%93%E5%AD%98%E5%87%BB%E7%A9%BF%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2021/09/30/Redis-%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/" class="archive-article-date">
-  	<time datetime="2021-09-29T17:05:17.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-09-30</time>
-</a>
+<nav id="article-nav">
+  
+  
+    <a href="/2021/09/30/Redis-%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Redis-使用场景</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
 
 
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2021/09/30/Redis-%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/">Redis-使用场景</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">NOTE</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">DB</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
+        
+        
+        <div class="toc-container tooltip-left">
+            <i class="icon-font icon-category"></i>
+            <div class="tooltip tooltip-east">
+                <span class="tooltip-item">
+                </span>
+                <span class="tooltip-content">
+                    <div class="toc-article">
+                    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E4%BB%80%E4%B9%88%E6%A0%B7%E7%9A%84%E6%95%B0%E6%8D%AE%E9%80%82%E5%90%88%E7%BC%93%E5%AD%98%EF%BC%9F"><span class="toc-number">1.</span> <span class="toc-text">一、什么样的数据适合缓存？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E4%BB%80%E4%B9%88%E6%98%AF%E7%BC%93%E5%AD%98%E5%87%BB%E7%A9%BF"><span class="toc-number">2.</span> <span class="toc-text">二、什么是缓存击穿</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E7%BC%93%E5%AD%98%E5%87%BB%E7%A9%BF%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="toc-number">3.</span> <span class="toc-text">三、缓存击穿的解决方案</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1%E3%80%81%E6%96%B9%E6%A1%88%E4%B8%80%EF%BC%9A%E5%90%8E%E5%8F%B0%E5%88%B7%E6%96%B0"><span class="toc-number">3.1.</span> <span class="toc-text">1、方案一：后台刷新</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2%E3%80%81%E6%96%B9%E6%A1%88%E4%BA%8C%EF%BC%9A%E6%A3%80%E6%9F%A5%E6%9B%B4%E6%96%B0"><span class="toc-number">3.2.</span> <span class="toc-text">2、方案二：检查更新</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3%E3%80%81%E6%96%B9%E6%A1%88%E4%B8%89%EF%BC%9A%E5%88%86%E7%BA%A7%E7%BC%93%E5%AD%98"><span class="toc-number">3.3.</span> <span class="toc-text">3、方案三：分级缓存</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4%E3%80%81%E6%96%B9%E6%A1%88%E5%9B%9B%EF%BC%9A%E5%8A%A0%E9%94%81"><span class="toc-number">3.4.</span> <span class="toc-text">4、方案四：加锁</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#1%E3%80%81%E5%9C%A8%E8%8E%B7%E5%8F%96%E6%95%B0%E6%8D%AE%E7%9A%84%E6%96%B9%E6%B3%95%E4%B8%8A%E5%8A%A0%E9%94%81%EF%BC%88synchronized%EF%BC%89"><span class="toc-number">3.4.1.</span> <span class="toc-text">1、在获取数据的方法上加锁（synchronized）</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2%E3%80%81%E5%9C%A8%E8%AF%B7%E6%B1%82%E6%89%93%E5%88%B0%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B9%8B%E5%89%8D%E5%8A%A0%E9%94%81"><span class="toc-number">3.4.2.</span> <span class="toc-text">2、在请求打到数据库之前加锁</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3%E3%80%81%E5%8F%8C%E9%87%8D%E6%A3%80%E6%9F%A5%E9%94%81%EF%BC%88Double-Check-Lock%EF%BC%89"><span class="toc-number">3.4.3.</span> <span class="toc-text">3、双重检查锁（Double Check Lock）</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#4%E3%80%81"><span class="toc-number">3.4.4.</span> <span class="toc-text">4、</span></a></li></ol></li></ol></li></ol>
+                    </div>
+                </span>
+            </div>
         </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2021/09/29/Quartz-%E4%BD%9C%E4%B8%9A%E8%B0%83%E5%BA%A6%E7%B3%BB%E7%BB%9F/" class="archive-article-date">
-  	<time datetime="2021-09-29T14:12:40.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-09-29</time>
-</a>
+        
+    </div>
+</aside>
 
 
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2021/09/29/Quartz-%E4%BD%9C%E4%B8%9A%E8%B0%83%E5%BA%A6%E7%B3%BB%E7%BB%9F/">Quartz-作业调度系统</a>
-    </h1>
-  
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">NOTE</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">FRAMEWORK</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2021/09/28/Elastic-Search/" class="archive-article-date">
-  	<time datetime="2021-09-28T15:58:43.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-09-28</time>
-</a>
-
-
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2021/09/28/Elastic-Search/">Elastic Search</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">NOTE</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">SEARCH</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2021/09/28/InfluxDB%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BA/" class="archive-article-date">
-  	<time datetime="2021-09-28T08:42:08.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-09-28</time>
-</a>
-
-
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2021/09/28/InfluxDB%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BA/">InfluxDB深入浅出</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">NOTE</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">DB</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2021/09/27/Guava-1-%E6%A6%82%E8%AE%BA/" class="archive-article-date">
-  	<time datetime="2021-09-27T14:22:05.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-09-27</time>
-</a>
-
-
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2021/09/27/Guava-1-%E6%A6%82%E8%AE%BA/">Guava-1:概论</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">NOTE</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2021/09/27/hello-world/" class="archive-article-date">
-  	<time datetime="2021-09-27T13:10:31.005Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-09-27</time>
-</a>
-
-
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2021/09/27/hello-world/">Hello World</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
   
   
-    </div></section>
   
 
-    
+  
+
+  
+
+  
 
 
           </div>
@@ -493,8 +445,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,
