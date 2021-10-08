@@ -6,17 +6,23 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://example.com">
-  <title>Tag: FRAMEWORK | nowinkey的小棉袄</title>
+  <title>JUC | nowinkey的小棉袄</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="这个人很懒，什么也没留下。">
-<meta property="og:type" content="website">
-<meta property="og:title" content="nowinkey的小棉袄">
-<meta property="og:url" content="http://example.com/tags/FRAMEWORK/index.html">
+  <meta name="description" content="JUC 简介 实用编程类通常用于并发编程。这个包包括一些小的标准化的可扩展框架，以及一些提供有用功能的类，否则很乏味或难以实现。以下是主要组件的简要说明。另请参阅 java.util.concurrent.locks 和 java.util.concurrent.atomic 包。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JUC">
+<meta property="og:url" content="http://example.com/2021/10/08/JUC/index.html">
 <meta property="og:site_name" content="nowinkey的小棉袄">
-<meta property="og:description" content="这个人很懒，什么也没留下。">
+<meta property="og:description" content="JUC 简介 实用编程类通常用于并发编程。这个包包括一些小的标准化的可扩展框架，以及一些提供有用功能的类，否则很乏味或难以实现。以下是主要组件的简要说明。另请参阅 java.util.concurrent.locks 和 java.util.concurrent.atomic 包。">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2021/10/08/JUC/3.png">
+<meta property="article:published_time" content="2021-10-08T14:00:07.000Z">
+<meta property="article:modified_time" content="2021-10-08T16:32:24.478Z">
 <meta property="article:author" content="nowinkey">
+<meta property="article:tag" content="DOC">
+<meta property="article:tag" content="CONCURRENT">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2021/10/08/JUC/3.png">
   
     <link rel="alternative" href="/atom.xml" title="nowinkey的小棉袄" type="application/atom+xml">
   
@@ -155,66 +161,235 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-JUC" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2021" class="archive-year">2021</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2021/09/29/Quartz-%E4%BD%9C%E4%B8%9A%E8%B0%83%E5%BA%A6%E7%B3%BB%E7%BB%9F/" class="archive-article-date">
-  	<time datetime="2021-09-29T14:12:40.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-09-29</time>
-</a>
-
-
-        </div>
-    	 
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2021/09/29/Quartz-%E4%BD%9C%E4%B8%9A%E8%B0%83%E5%BA%A6%E7%B3%BB%E7%BB%9F/">Quartz-作业调度系统</a>
+    <h1 class="article-title" itemprop="name">
+      JUC
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
+		<!--显示阅读次数-->
+		
+		  <br/>
+		  <a class="cloud-tie-join-count" href="javascript:void(0);" style="color:gray;font-size:14px;">
+		  <span class="icon-sort"></span>
+		  <span id="busuanzi_container_page_pv" style="color:#ef7522;font-size:14px;">
+			阅读数: <span id="busuanzi_value_page_pv"></span>次 &nbsp;&nbsp;
+		  </span>
+		  </a>
+		
+		<!--显示阅读次数完毕-->
+        
+        <a href="/2021/10/08/JUC/" class="archive-article-date">
+  	<time datetime="2021-10-08T14:00:07.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-10-08</time>
+</a>
+
+
+        <!-- 不蒜子统计 -->
+        <span id="busuanzi_container_page_pv" style='display:none' class="archive-article-date">
+              <i class="icon-smile icon"></i> 阅读数：<span id="busuanzi_value_page_pv"></span>次
+        </span>
+
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="JUC-简介"><a href="#JUC-简介" class="headerlink" title="JUC 简介"></a>JUC 简介</h3><blockquote>
+<p>实用编程类通常用于并发编程。这个包包括一些小的标准化的可扩展框架，以及一些提供有用功能的类，否则很乏味或难以实现。以下是主要组件的简要说明。另请参阅 java.util.concurrent.locks 和 java.util.concurrent.atomic 包。</p>
+</blockquote>
+<span id="more"></span>
+
+<p><img src="3.png" alt="J.U.C"></p>
+<hr>
+<h3 id="Synchronizers-同步器"><a href="#Synchronizers-同步器" class="headerlink" title="Synchronizers(同步器)"></a>Synchronizers(同步器)</h3><p>五个类有助于常见的专用同步习语：</p>
+<ul>
+<li>Semaphore 是一个经典的开发工具</li>
+<li>CountDownLatch 是一个非常简单但非常常见的实用程序，用于阻塞直到指定数量的信号、事件或条件成立。</li>
+<li>CycliBarrier 是可重置的多路同步点，在某些并行编程风格中很有用。</li>
+<li>Phaser 提供一种更灵活的屏障形式，可用于控制多个线程之间的分阶段计算。</li>
+<li>Exchanger 允许两个线程在一个集合点交换对象，并且在几个管道设计中很有用。</li>
+</ul>
+<h4 id="Semaphore-信号量-ˈseməfoː-r"><a href="#Semaphore-信号量-ˈseməfoː-r" class="headerlink" title="Semaphore (信号量) [ˈseməfɔː(r)]"></a>Semaphore (信号量) [ˈseməfɔː(r)]</h4><p>对象</p>
+<ul>
+<li>java.util.concurrent.Semaphore</li>
+</ul>
+<p>实现的接口</p>
+<ul>
+<li>Serializable</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public class Semaphore extends Object Implements Serializable</span><br></pre></td></tr></table></figure>
+
+<p><strong>Introduction</strong></p>
+<ul>
+<li><p>计数信号量。从概念上讲，信号量维护一组许可。acquuire()如有必要，每个人都会阻止，知道获得许可，然后再接收。每个release()添加一个许可，可能会释放一个阻塞的收单方。但是，没有使用实际的许可对象；在 Semaphore 刚刚保持数的计数可用，采取响应的行动。</p>
+</li>
+<li><p>信号量通常用于限制可以访问某些(物理或逻辑)资源的线程数。例如：这是一个使用信号量来控制对项目池的访问的类。</p>
+</li>
+<li><p>在获得一个项目之前，每个线程必须从信号量中获得一个许可，以保证一个项目可供使用。当线程处理完毕，它会返回到池中，并且将许可返回给信号量，从而允许另一个线程获取该项目。请注意，acquire()调用时不会持有同步锁，因为这会阻止项目返回池中。信号量封装了限制访问池所需的同步，与维护池本身一致性所需的任何同步分开。</p>
+</li>
+</ul>
+
+      
+
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
+        </div>
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">NOTE</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">DOC</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">FRAMEWORK</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">CONCURRENT</a>
         		</li>
       		
 		</ul>
 	</div>
 
-          
+      
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://example.com/2021/10/08/JUC/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
+  
+<nav id="article-nav">
   
   
-    </div></section>
+    <a href="/2021/10/01/%E7%BC%93%E5%AD%98%E5%87%BB%E7%A9%BF%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">缓存击穿的解决方案</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+        <div class="toc-container tooltip-left">
+            <i class="icon-font icon-category"></i>
+            <div class="tooltip tooltip-east">
+                <span class="tooltip-item">
+                </span>
+                <span class="tooltip-content">
+                    <div class="toc-article">
+                    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#JUC-%E7%AE%80%E4%BB%8B"><span class="toc-number">1.</span> <span class="toc-text">JUC 简介</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Synchronizers-%E5%90%8C%E6%AD%A5%E5%99%A8"><span class="toc-number">2.</span> <span class="toc-text">Synchronizers(同步器)</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Semaphore-%E4%BF%A1%E5%8F%B7%E9%87%8F-%CB%88sem%C9%99fo%CB%90-r"><span class="toc-number">2.1.</span> <span class="toc-text">Semaphore (信号量) [ˈseməfɔː(r)]</span></a></li></ol></li></ol>
+                    </div>
+                </span>
+            </div>
+        </div>
+        
+    </div>
+</aside>
+
+
+
+  
+  
   
 
-    
+  
+
+  
+
+  
 
 
           </div>
@@ -248,9 +423,9 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
+		isPost: true,
 		isArchive: false,
-		isTag: true,
+		isTag: false,
 		isCategory: false,
 		open_in_new: false,
 		toc_hide_index: true,
