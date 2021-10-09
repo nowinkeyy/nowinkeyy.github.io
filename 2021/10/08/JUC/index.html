@@ -16,8 +16,12 @@
 <meta property="og:description" content="JUC 简介 实用编程类通常用于并发编程。这个包包括一些小的标准化的可扩展框架，以及一些提供有用功能的类，否则很乏味或难以实现。以下是主要组件的简要说明。另请参阅 java.util.concurrent.locks 和 java.util.concurrent.atomic 包。">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/2021/10/08/JUC/3.png">
+<meta property="og:image" content="http://example.com/2021/10/08/JUC/4.png">
+<meta property="og:image" content="http://example.com/2021/10/08/JUC/7.png">
+<meta property="og:image" content="http://example.com/2021/10/08/JUC/5.png">
+<meta property="og:image" content="http://example.com/2021/10/08/JUC/6.png">
 <meta property="article:published_time" content="2021-10-08T14:00:07.000Z">
-<meta property="article:modified_time" content="2021-10-08T16:32:24.478Z">
+<meta property="article:modified_time" content="2021-10-09T06:09:45.984Z">
 <meta property="article:author" content="nowinkey">
 <meta property="article:tag" content="DOC">
 <meta property="article:tag" content="CONCURRENT">
@@ -214,15 +218,16 @@
 <li>Phaser 提供一种更灵活的屏障形式，可用于控制多个线程之间的分阶段计算。</li>
 <li>Exchanger 允许两个线程在一个集合点交换对象，并且在几个管道设计中很有用。</li>
 </ul>
-<h4 id="Semaphore-信号量-ˈseməfoː-r"><a href="#Semaphore-信号量-ˈseməfoː-r" class="headerlink" title="Semaphore (信号量) [ˈseməfɔː(r)]"></a>Semaphore (信号量) [ˈseməfɔː(r)]</h4><p>对象</p>
+<hr>
+<h4 id="1、Semaphore-信号量-ˈseməfoː-r"><a href="#1、Semaphore-信号量-ˈseməfoː-r" class="headerlink" title="1、Semaphore (信号量) [ˈseməfɔː(r)]"></a>1、Semaphore (信号量) [ˈseməfɔː(r)]</h4><h5 id="1、简介"><a href="#1、简介" class="headerlink" title="1、简介"></a>1、简介</h5><p><strong>对象</strong></p>
 <ul>
 <li>java.util.concurrent.Semaphore</li>
 </ul>
-<p>实现的接口</p>
+<p><strong>实现的接口</strong></p>
 <ul>
 <li>Serializable</li>
 </ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public class Semaphore extends Object Implements Serializable</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Semaphore</span> <span class="keyword">extends</span> <span class="title">Object</span> <span class="title">Implements</span> <span class="title">Serializable</span></span></span><br></pre></td></tr></table></figure>
 
 <p><strong>Introduction</strong></p>
 <ul>
@@ -233,7 +238,30 @@
 <li><p>在获得一个项目之前，每个线程必须从信号量中获得一个许可，以保证一个项目可供使用。当线程处理完毕，它会返回到池中，并且将许可返回给信号量，从而允许另一个线程获取该项目。请注意，acquire()调用时不会持有同步锁，因为这会阻止项目返回池中。信号量封装了限制访问池所需的同步，与维护池本身一致性所需的任何同步分开。</p>
 </li>
 </ul>
+<hr>
+<h5 id="2、关键-API"><a href="#2、关键-API" class="headerlink" title="2、关键 API"></a>2、关键 API</h5><ul>
+<li><p>void acquire()：从此信号量获取一个许可，在提供一个许可前一直将线程阻塞，否则线程被中断。</p>
+</li>
+<li><p>void release()：释放一个许可，将其返回给信号量。</p>
+</li>
+<li><p>int availablePermits()：返回此信号量中当前可用的许可数。</p>
+</li>
+<li><p>boolean hasQueuedThreads()：查询是否有线程正在等待获取。</p>
+</li>
+</ul>
+<hr>
+<h5 id="3、源码分析"><a href="#3、源码分析" class="headerlink" title="3、源码分析"></a>3、源码分析</h5><p><img src="4.png" alt="Semaphore内部类"></p>
+<p>分为 继承于 AbstractQueuedSynchronizer 的 Sync 抽象类；</p>
+<p>以及继承于 Sync 的 NonfairSync(非公平版本) 和 FairSync(公平版本) 类。</p>
+<p><img src="7.png" alt="Sync类"></p>
+<p><img src="5.png" alt="NonfairSync类"></p>
+<p><img src="6.png" alt="FairSync类"></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">acquire</span><span class="params">(<span class="keyword">int</span> permits)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (permits &lt; <span class="number">0</span>) <span class="keyword">throw</span> <span class="keyword">new</span>  IllegalArgumentException();</span><br><span class="line">    <span class="comment">// 调用了父类 AQS 中的 acquireSharedInterruptibly 方法</span></span><br><span class="line">    sync.acquireSharedInterruptibly(permits);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title">acquireSharedInterruptibly</span><span class="params">(<span class="keyword">int</span> arg)</span></span></span><br><span class="line"><span class="function">        <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">    <span class="comment">// 如果线程被中断了，抛出异常</span></span><br><span class="line">    <span class="keyword">if</span> (Thread.interrupted())</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> InterruptedException();</span><br><span class="line">    <span class="comment">// 获取许可失败，将线程加入到等待队列中       </span></span><br><span class="line">    <span class="keyword">if</span> (tryAcquireShared(arg) &lt; <span class="number">0</span>)</span><br><span class="line">        doAcquireSharedInterruptibly(arg);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h5 id="4、面经"><a href="#4、面经" class="headerlink" title="4、面经"></a>4、面经</h5>
       
 
       
@@ -370,7 +398,7 @@
                 </span>
                 <span class="tooltip-content">
                     <div class="toc-article">
-                    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#JUC-%E7%AE%80%E4%BB%8B"><span class="toc-number">1.</span> <span class="toc-text">JUC 简介</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Synchronizers-%E5%90%8C%E6%AD%A5%E5%99%A8"><span class="toc-number">2.</span> <span class="toc-text">Synchronizers(同步器)</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Semaphore-%E4%BF%A1%E5%8F%B7%E9%87%8F-%CB%88sem%C9%99fo%CB%90-r"><span class="toc-number">2.1.</span> <span class="toc-text">Semaphore (信号量) [ˈseməfɔː(r)]</span></a></li></ol></li></ol>
+                    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#JUC-%E7%AE%80%E4%BB%8B"><span class="toc-number">1.</span> <span class="toc-text">JUC 简介</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Synchronizers-%E5%90%8C%E6%AD%A5%E5%99%A8"><span class="toc-number">2.</span> <span class="toc-text">Synchronizers(同步器)</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1%E3%80%81Semaphore-%E4%BF%A1%E5%8F%B7%E9%87%8F-%CB%88sem%C9%99fo%CB%90-r"><span class="toc-number">2.1.</span> <span class="toc-text">1、Semaphore (信号量) [ˈseməfɔː(r)]</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#1%E3%80%81%E7%AE%80%E4%BB%8B"><span class="toc-number">2.1.1.</span> <span class="toc-text">1、简介</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2%E3%80%81%E5%85%B3%E9%94%AE-API"><span class="toc-number">2.1.2.</span> <span class="toc-text">2、关键 API</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3%E3%80%81%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90"><span class="toc-number">2.1.3.</span> <span class="toc-text">3、源码分析</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#4%E3%80%81%E9%9D%A2%E7%BB%8F"><span class="toc-number">2.1.4.</span> <span class="toc-text">4、面经</span></a></li></ol></li></ol></li></ol>
                     </div>
                 </span>
             </div>
