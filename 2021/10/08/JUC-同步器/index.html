@@ -16,13 +16,13 @@
 <meta property="og:description" content="JUC 简介 实用编程类通常用于并发编程。这个包包括一些小的标准化的可扩展框架，以及一些提供有用功能的类，否则很乏味或难以实现。以下是主要组件的简要说明。另请参阅 java.util.concurrent.locks 和 java.util.concurrent.atomic 包。">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/2021/10/08/JUC-%E5%90%8C%E6%AD%A5%E5%99%A8/3.png">
-<meta property="og:image" content="http://example.com/2021/10/08/JUC-%E5%90%8C%E6%AD%A5%E5%99%A8/Semaphore%E6%9E%84%E9%80%A0%E6%96%B9%E6%B3%95.png">
-<meta property="og:image" content="http://example.com/2021/10/08/JUC-%E5%90%8C%E6%AD%A5%E5%99%A8/Semaphore2.png">
-<meta property="og:image" content="http://example.com/2021/10/08/JUC-%E5%90%8C%E6%AD%A5%E5%99%A8/Sync%E7%B1%BB.png">
+<meta property="og:image" content="http://example.com/2021/10/08/JUC-%E5%90%8C%E6%AD%A5%E5%99%A8/4.png">
+<meta property="og:image" content="http://example.com/2021/10/08/JUC-%E5%90%8C%E6%AD%A5%E5%99%A8/7.png">
+<meta property="og:image" content="http://example.com/2021/10/08/JUC-%E5%90%8C%E6%AD%A5%E5%99%A8/8.png">
 <meta property="og:image" content="http://example.com/2021/10/08/JUC-%E5%90%8C%E6%AD%A5%E5%99%A8/5.png">
 <meta property="og:image" content="http://example.com/2021/10/08/JUC-%E5%90%8C%E6%AD%A5%E5%99%A8/6.png">
 <meta property="article:published_time" content="2021-10-08T14:00:07.000Z">
-<meta property="article:modified_time" content="2021-10-09T07:00:17.885Z">
+<meta property="article:modified_time" content="2021-10-09T07:05:22.182Z">
 <meta property="article:author" content="nowinkey">
 <meta property="article:tag" content="DOC">
 <meta property="article:tag" content="CONCURRENT">
@@ -241,24 +241,18 @@
 </ul>
 <hr>
 <h5 id="2、关键-API"><a href="#2、关键-API" class="headerlink" title="2、关键 API"></a>2、关键 API</h5><ul>
-<li><p>void acquire()：从此信号量获取一个许可，在提供一个许可前一直将线程阻塞，否则线程被中断。</p>
-</li>
-<li><p>void release()：释放一个许可，将其返回给信号量。</p>
-</li>
-<li><p>int availablePermits()：返回此信号量中当前可用的许可数。</p>
-</li>
-<li><p>boolean hasQueuedThreads()：查询是否有线程正在等待获取。</p>
-</li>
+<li>void acquire()：从此信号量获取一个许可，在提供一个许可前一直将线程阻塞，否则线程被中断。</li>
+<li>void release()：释放一个许可，将其返回给信号量。</li>
+<li>int availablePermits()：返回此信号量中当前可用的许可数。</li>
+<li>boolean hasQueuedThreads()：查询是否有线程正在等待获取。</li>
 </ul>
 <hr>
 <ul>
 <li><h5 id="3、源码分析"><a href="#3、源码分析" class="headerlink" title="3、源码分析"></a>3、源码分析</h5><ul>
 <li>Semaphore 有两个构造方法，如下：<ul>
-<li><img src="Semaphore%E6%9E%84%E9%80%A0%E6%96%B9%E6%B3%95.png" alt="Semaphore构造方法"></li>
+<li><img src="4.png" alt="Semaphore构造方法"></li>
 <li>构造方法有两个，第一种只传 permits 参数，默认是非公平模式</li>
 <li>第二种传 permits 和 fair，如果 fair 是 true 的话则是公平模式</li>
-</ul>
-</li>
 </ul>
 </li>
 </ul>
@@ -270,14 +264,18 @@
 </li>
 <li><p>以及继承于 Sync 的 NonfairSync(非公平模式) 和 FairSync(公平模式) 类。</p>
 </li>
-<li><p><img src="Semaphore2.png" alt="Semaphore2"></p>
+<li><p><img src="7.png" alt="Semaphore内部类"></p>
 </li>
 </ul>
 </li>
 </ul>
-<p><img src="Sync%E7%B1%BB.png" alt="Sync类"></p>
+<hr>
+<p><img src="8.png" alt="Sync类"></p>
 <p><img src="5.png" alt="NonfairSync类"></p>
 <p><img src="6.png" alt="FairSync类"></p>
+</li>
+</ul>
+<hr>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">acquire</span><span class="params">(<span class="keyword">int</span> permits)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (permits &lt; <span class="number">0</span>) <span class="keyword">throw</span> <span class="keyword">new</span>  IllegalArgumentException();</span><br><span class="line">    <span class="comment">// 调用了父类 AQS 中的 acquireSharedInterruptibly 方法</span></span><br><span class="line">    sync.acquireSharedInterruptibly(permits);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title">acquireSharedInterruptibly</span><span class="params">(<span class="keyword">int</span> arg)</span></span></span><br><span class="line"><span class="function">        <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">    <span class="comment">// 如果线程被中断了，抛出异常</span></span><br><span class="line">    <span class="keyword">if</span> (Thread.interrupted())</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> InterruptedException();</span><br><span class="line">    <span class="comment">// 获取许可失败，将线程加入到等待队列中       </span></span><br><span class="line">    <span class="keyword">if</span> (tryAcquireShared(arg) &lt; <span class="number">0</span>)</span><br><span class="line">        doAcquireSharedInterruptibly(arg);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -551,15 +549,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">DB</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">DOC</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">CONCURRENT</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">DB</a>
               </li>
              
               <li class="article-tag-list-item">
