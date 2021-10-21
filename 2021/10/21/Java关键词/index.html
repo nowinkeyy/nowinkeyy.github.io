@@ -6,16 +6,19 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://example.com">
-  <title>Tag: DB | nowinkey的小棉袄</title>
+  <title>Java关键词-未完待续 | nowinkey的小棉袄</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="这个人很懒，什么也没留下。">
-<meta property="og:type" content="website">
-<meta property="og:title" content="nowinkey的小棉袄">
-<meta property="og:url" content="http://example.com/tags/DB/index.html">
+  <meta name="description" content="总结一些Java的关键词">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java关键词-未完待续">
+<meta property="og:url" content="http://example.com/2021/10/21/Java%E5%85%B3%E9%94%AE%E8%AF%8D/index.html">
 <meta property="og:site_name" content="nowinkey的小棉袄">
-<meta property="og:description" content="这个人很懒，什么也没留下。">
+<meta property="og:description" content="总结一些Java的关键词">
 <meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-10-21T14:53:35.000Z">
+<meta property="article:modified_time" content="2021-10-21T14:54:56.171Z">
 <meta property="article:author" content="nowinkey">
+<meta property="article:tag" content="Java">
 <meta name="twitter:card" content="summary">
   
     <link rel="alternative" href="/atom.xml" title="nowinkey的小棉袄" type="application/atom+xml">
@@ -155,110 +158,255 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-Java关键词" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2021" class="archive-year">2021</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2021/09/30/Redis-%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/" class="archive-article-date">
-  	<time datetime="2021-09-29T17:05:17.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-09-30</time>
-</a>
-
-
-        </div>
-    	 
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2021/09/30/Redis-%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/">Redis-使用场景</a>
+    <h1 class="article-title" itemprop="name">
+      Java关键词-未完待续
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
+		<!--显示阅读次数-->
+		
+		  <br/>
+		  <a class="cloud-tie-join-count" href="javascript:void(0);" style="color:gray;font-size:14px;">
+		  <span class="icon-sort"></span>
+		  <span id="busuanzi_container_page_pv" style="color:#ef7522;font-size:14px;">
+			阅读数: <span id="busuanzi_value_page_pv"></span>次 &nbsp;&nbsp;
+		  </span>
+		  </a>
+		
+		<!--显示阅读次数完毕-->
+        
+        <a href="/2021/10/21/Java%E5%85%B3%E9%94%AE%E8%AF%8D/" class="archive-article-date">
+  	<time datetime="2021-10-21T14:53:35.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-10-21</time>
+</a>
+
+
+        <!-- 不蒜子统计 -->
+        <span id="busuanzi_container_page_pv" style='display:none' class="archive-article-date">
+              <i class="icon-smile icon"></i> 阅读数：<span id="busuanzi_value_page_pv"></span>次
+        </span>
+
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>总结一些Java的关键词</p>
+<span id="more"></span>
+
+<h3 id="abstract"><a href="#abstract" class="headerlink" title="abstract"></a>abstract</h3><ul>
+<li><p>译：抽象</p>
+</li>
+<li><p>可修饰的结构：类（抽象类）、方法（抽象方法）</p>
+</li>
+<li><p>只有抽象类中才能有抽象方法</p>
+</li>
+<li><p>abstract 不能与 ==final== 共存，因为 final 关键字修饰的类是不能被继承的</p>
+</li>
+<li><p>abstract 不能与 ==private== 共存，因为私有的东西不能继承</p>
+</li>
+<li><p>abstract 不能与 ==static== 共存，当 static 修饰方法时，该方法可以通过类名直接调用，而 abstract 修饰的抽象方法不能被调用</p>
+</li>
+</ul>
+<h4 id="抽象类"><a href="#抽象类" class="headerlink" title="抽象类"></a>抽象类</h4><p><strong>1、特点：</strong></p>
+<ul>
+<li><p>1.抽象类不能==被实例化==，对抽象类不能用new方法。</p>
+</li>
+<li><p>2.抽象类中允许有一种或多种或者全部抽象方法。</p>
+</li>
+<li><p>3.抽象类的子类继承抽象类后，必须要==重写抽象类中的所有抽象方法==，除非子类也==修饰为抽象类==。</p>
+</li>
+<li><p>4.抽象类也有==构造函数==。虽然抽象类不能实例化，但抽象类的子类在实例化的时候依然会调用其父类的构造函数。构造函数==也可以用来初始化抽象类内部声明的通用变量==，并被各种实现使用。即使你没有提供构造函数，编译器会默认添加无参构造器，没有的话你的子类将无法编译，因为在任何构造函数中的第一条语句隐式调用super()，Java中默认超类的构造函数。</p>
+</li>
+<li><p>5.抽象类能定义抽象方法，普通类不行。抽象类不能实例化，普通类可以。</p>
+</li>
+</ul>
+<p><strong>2、作用：</strong></p>
+<ul>
+<li>1.抽象类主要用于被继承，继承于抽象类的子类，就必须要实现其所有抽象方法。<ul>
+<li>将多个类中共有的属性提取出来，形成一个抽象类，方便代码的使用和维护。（==面向对象思想==）</li>
+</ul>
+</li>
+</ul>
+<h4 id="抽象方法"><a href="#抽象方法" class="headerlink" title="抽象方法"></a>抽象方法</h4><p><strong>1、特点：</strong></p>
+<ul>
+<li>1.只声明而未实现的实体（==即没有方法体==）</li>
+</ul>
+<p><strong>2、作用：</strong></p>
+<ul>
+<li>1.抽象方法用于==被子类继承后重写==。可以达到不同子类可以根据自己的特性来定义从父类继承过来的抽象方法。</li>
+</ul>
+<h4 id="抽象类和接口"><a href="#抽象类和接口" class="headerlink" title="抽象类和接口"></a>抽象类和接口</h4><ul>
+<li><p>1.当一个抽象类的所有成员只有抽象方法时，便是一个接口，可以用关键字 interface 表示。</p>
+</li>
+<li><p>2.接口中的成员有两种：</p>
+<ul>
+<li>全局常量和抽象方法</li>
+</ul>
+</li>
+<li><p>3.接口中的权限必须是 public，默认添加public</p>
+</li>
+<li><p>4.接口中有抽象方法，因此接口也是抽象类，不可以实例化。所以其子类也必须覆盖了接口中的所有的抽象方法后，才能实例化，否则该子类也是一个抽象类。</p>
+</li>
+</ul>
+
+      
+
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
+        </div>
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">NOTE</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">DB</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
         		</li>
       		
 		</ul>
 	</div>
 
-          
+      
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://example.com/2021/10/21/Java%E5%85%B3%E9%94%AE%E8%AF%8D/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2021/09/28/InfluxDB%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BA/" class="archive-article-date">
-  	<time datetime="2021-09-28T08:42:08.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-09-28</time>
-</a>
+<nav id="article-nav">
+  
+  
+    <a href="/2021/10/08/JUC/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">JUC-同步器</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
 
 
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2021/09/28/InfluxDB%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BA/">InfluxDB深入浅出</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">NOTE</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">DB</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
+        
+        
+        <div class="toc-container tooltip-left">
+            <i class="icon-font icon-category"></i>
+            <div class="tooltip tooltip-east">
+                <span class="tooltip-item">
+                </span>
+                <span class="tooltip-content">
+                    <div class="toc-article">
+                    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#abstract"><span class="toc-number">1.</span> <span class="toc-text">abstract</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8A%BD%E8%B1%A1%E7%B1%BB"><span class="toc-number">1.1.</span> <span class="toc-text">抽象类</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8A%BD%E8%B1%A1%E6%96%B9%E6%B3%95"><span class="toc-number">1.2.</span> <span class="toc-text">抽象方法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8A%BD%E8%B1%A1%E7%B1%BB%E5%92%8C%E6%8E%A5%E5%8F%A3"><span class="toc-number">1.3.</span> <span class="toc-text">抽象类和接口</span></a></li></ol></li></ol>
+                    </div>
+                </span>
+            </div>
         </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
+        
+    </div>
+</aside>
+
+
+
   
   
-    </div></section>
   
 
-    
+  
+
+  
+
+  
 
 
           </div>
@@ -292,9 +440,9 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
+		isPost: true,
 		isArchive: false,
-		isTag: true,
+		isTag: false,
 		isCategory: false,
 		open_in_new: false,
 		toc_hide_index: true,
