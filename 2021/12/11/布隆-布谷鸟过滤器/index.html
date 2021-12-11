@@ -6,18 +6,19 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://example.com">
-  <title>Hello World | nowinkey的小棉袄</title>
+  <title>布隆&amp;布谷鸟过滤器 | nowinkey的小棉袄</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub.">
+  <meta name="description" content="学习过滤器，不包含使用方式（Redis集成，Guava内置布隆等）。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hello World">
-<meta property="og:url" content="http://example.com/2021/09/27/hello-world/index.html">
+<meta property="og:title" content="布隆&amp;布谷鸟过滤器">
+<meta property="og:url" content="http://example.com/2021/12/11/%E5%B8%83%E9%9A%86-%E5%B8%83%E8%B0%B7%E9%B8%9F%E8%BF%87%E6%BB%A4%E5%99%A8/index.html">
 <meta property="og:site_name" content="nowinkey的小棉袄">
-<meta property="og:description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub.">
+<meta property="og:description" content="学习过滤器，不包含使用方式（Redis集成，Guava内置布隆等）。">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2021-09-27T13:10:31.005Z">
-<meta property="article:modified_time" content="2021-09-28T09:46:11.878Z">
+<meta property="article:published_time" content="2021-12-11T06:32:56.000Z">
+<meta property="article:modified_time" content="2021-12-11T12:47:34.610Z">
 <meta property="article:author" content="nowinkey">
+<meta property="article:tag" content="-NOTE">
 <meta name="twitter:card" content="summary">
   
     <link rel="alternative" href="/atom.xml" title="nowinkey的小棉袄" type="application/atom+xml">
@@ -157,14 +158,14 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-hello-world" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-布隆-布谷鸟过滤器" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      Hello World
+      布隆&amp;布谷鸟过滤器
     </h1>
   
 
@@ -180,8 +181,8 @@
 		
 		<!--显示阅读次数完毕-->
         
-        <a href="/2021/09/27/hello-world/" class="archive-article-date">
-  	<time datetime="2021-09-27T13:10:31.005Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-09-27</time>
+        <a href="/2021/12/11/%E5%B8%83%E9%9A%86-%E5%B8%83%E8%B0%B7%E9%B8%9F%E8%BF%87%E6%BB%A4%E5%99%A8/" class="archive-article-date">
+  	<time datetime="2021-12-11T06:32:56.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-12-11</time>
 </a>
 
 
@@ -195,21 +196,160 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
+        <p>学习过滤器，不包含使用方式（Redis集成，Guava内置布隆等）。</p>
 <span id="more"></span>
 
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+<h3 id="一、布隆和布谷鸟的异同"><a href="#一、布隆和布谷鸟的异同" class="headerlink" title="一、布隆和布谷鸟的异同"></a>一、布隆和布谷鸟的异同</h3><h4 id="同："><a href="#同：" class="headerlink" title="同："></a>同：</h4><ul>
+<li>都是过滤器</li>
+</ul>
+<h4 id="异："><a href="#异：" class="headerlink" title="异："></a>异：</h4><ul>
+<li><strong>算法</strong> ：布隆使用多个hash函数；布谷鸟使用布谷鸟哈希算法。</li>
+<li><strong>能否删除</strong> ： 布隆无法删除元素；布谷鸟可以删除元素，但有误删可能。</li>
+<li><strong>空间是否是2的指数</strong> ： 布隆过滤器不需要是2的指数；布谷鸟必须为2的指数。</li>
+<li><strong>空间利用率</strong> ： 相同误判下，布谷鸟空间节省40%多。</li>
+<li><strong>查询性能</strong> ： 布隆查询性能较弱，因为使用了多个hash函数，内存跨度大，缓存行命中率低；布谷鸟访问内存次数较低，效率较高。</li>
+<li><strong>哈希相关</strong> ： 布隆的多个hash函数之间没有关系；布谷鸟的两个hash函数可相互推导，有“空间是2的指数”和“按位与”的关系。</li>
+<li><strong>重复插入相同元素</strong> ：布隆天然自带重复过滤；布谷鸟会发生挤兑循环问题。 </li>
+</ul>
+<h4 id="总结（布隆相对于布谷鸟的不足）："><a href="#总结（布隆相对于布谷鸟的不足）：" class="headerlink" title="总结（布隆相对于布谷鸟的不足）："></a>总结（布隆相对于布谷鸟的不足）：</h4><ul>
+<li><strong>查询性能弱</strong></li>
+<li><strong>空间效率低</strong></li>
+<li><strong>不支持反向删除操作</strong></li>
+</ul>
+<hr>
+<h3 id="二、布隆过滤器（Bloom-Filter）"><a href="#二、布隆过滤器（Bloom-Filter）" class="headerlink" title="二、布隆过滤器（Bloom Filter）"></a>二、布隆过滤器（Bloom Filter）</h3><h4 id="1-简介"><a href="#1-简介" class="headerlink" title="1.简介"></a>1.简介</h4><blockquote>
+<p>布隆过滤器（Bloom Filter）是1970年由布隆提出的。它实际上是一个<strong>很长的二进制向量和一系列随机映射函数</strong>。布隆过滤器可以用于<strong>检索一个元素是否在一个集合</strong>中。它的优点是<strong>空间效率和查询时间都比一般的算法要好的多</strong>，缺点是有<strong>一定的误识别率和删除困难</strong>。</p>
+</blockquote>
+<h5 id="布隆过滤器的优点"><a href="#布隆过滤器的优点" class="headerlink" title="布隆过滤器的优点"></a>布隆过滤器的优点</h5><ul>
+<li><p>时间复杂度低，增加和查询元素的时间复杂度<strong>为O(N)<strong>，（</strong>N为哈希函数的个数</strong>，通常情况比较小）。</p>
+</li>
+<li><p>保密性强，布隆过滤器不存储元素本身。</p>
+</li>
+<li><p>存储空间小，如果允许一定的误判，布隆过滤器是非常节省空间的（<strong>相比其他数据结构，如：set集合</strong>）。</p>
+</li>
+</ul>
+<h5 id="布隆过滤器的缺点"><a href="#布隆过滤器的缺点" class="headerlink" title="布隆过滤器的缺点"></a>布隆过滤器的缺点</h5><ul>
+<li><p>有一定的误判率，但是可以通过调整参数来控制误判率。</p>
+</li>
+<li><p>无法获取元素本身</p>
+</li>
+<li><p>很难删除元素</p>
+</li>
+</ul>
+<hr>
+<h4 id="2-使用场景"><a href="#2-使用场景" class="headerlink" title="2.使用场景"></a>2.使用场景</h4><p>Bloom Filter 可以告诉我们 <strong>“某样东西一定不存在或可能存在”</strong></p>
+<ul>
+<li><p><strong>解决 Redis 缓存穿透问题</strong></p>
+</li>
+<li><p>邮件过滤，使用布隆过滤器来做邮件黑名单过滤</p>
+</li>
+<li><p>对爬虫网站进行过滤</p>
+</li>
+<li><p>解决新闻推荐过的不再推荐（类似抖音刷过的往下滑不再刷到）</p>
+</li>
+<li><p>HBase/RocksDB/LevelDB等数据库内置布隆过滤器，判断数据是否存在，可以减少数据库的IO请求</p>
+</li>
+</ul>
+<hr>
+<h4 id="3-原理"><a href="#3-原理" class="headerlink" title="3.原理"></a>3.原理</h4><h5 id="3-1-数据结构"><a href="#3-1-数据结构" class="headerlink" title="3.1 数据结构"></a>3.1 数据结构</h5><p>布隆过滤器实际是一个很长的二进制向量和一系列随机映射函数。以Redis中的布隆过滤器实现为例，Redis中的布隆底层是<strong>一个大型位数组（二进制数组）+多个无偏hash函数</strong>。</p>
+<hr>
+<h5 id="3-2-空间计算"><a href="#3-2-空间计算" class="headerlink" title="3.2 空间计算"></a>3.2 空间计算</h5><p>初始化 Bloom Filter 时需要两个参数，<strong>预计加入元素的大小n</strong> and <strong>运行的错误率f</strong>。过滤器会根据这两个参数计算出二进制数据的大小和无偏hash函数的个数。</p>
+<ul>
+<li><p><strong>错误率越低，位数组越长，空间占用越大</strong></p>
+</li>
+<li><p><strong>错误率越低，无偏hash函数个数越多，计算耗时越长</strong></p>
+</li>
+</ul>
+<hr>
+<h5 id="3-3-增加元素"><a href="#3-3-增加元素" class="headerlink" title="3.3 增加元素"></a>3.3 增加元素</h5><ul>
+<li><p>通过 k 个无偏hash函数计算得到 k 个 hash 值</p>
+</li>
+<li><p>将 k 个 hash 值依次取模数组长度，得到数组索引下标</p>
+</li>
+<li><p>将数组索引下标对应的值置为 1</p>
+</li>
+</ul>
+<hr>
+<h5 id="3-4-查询元素"><a href="#3-4-查询元素" class="headerlink" title="3.4 查询元素"></a>3.4 查询元素</h5><ul>
+<li><p>通过 k 个无偏hash函数计算得到 k 个 hash 值</p>
+</li>
+<li><p>将 k 个 hash 值依次取模数组长度，得到数组索引下标</p>
+</li>
+<li><p>判断数组索引下标处的值是否全部为 1，**如果全部为 1 则存在(可能误判)**， <strong>如果有一个不为1（为0）则必定不存在</strong></p>
+</li>
+</ul>
+<p><strong>误判的原因</strong> ： hash冲突无法避免，不同的元素通过hash函数计算得出的hash值仍可能相同。<strong>可能是两个不同元素经过k个hash函数得到完全相同的k个hash值</strong>；<strong>也可能是多个元素得到的多个hash值把某个元素的k个hash值覆盖</strong>。</p>
+<hr>
+<h5 id="3-5-删除元素"><a href="#3-5-删除元素" class="headerlink" title="3.5 删除元素"></a>3.5 删除元素</h5><p>不支持，有一些变形的特定布隆过滤器支持元素的删除，但不了解。hash冲突的存在导致删除困难。</p>
+<hr>
+<h5 id="3-6-修改元素"><a href="#3-6-修改元素" class="headerlink" title="3.6 修改元素"></a>3.6 修改元素</h5><p>本质为删除元素+增加元素，一样不支持。</p>
+<hr>
+<h3 id="三、布谷鸟过滤器（Cuckoo-Filter）"><a href="#三、布谷鸟过滤器（Cuckoo-Filter）" class="headerlink" title="三、布谷鸟过滤器（Cuckoo Filter）"></a>三、布谷鸟过滤器（Cuckoo Filter）</h3><h4 id="1-简介-1"><a href="#1-简介-1" class="headerlink" title="1.简介"></a>1.简介</h4><ul>
+<li><p>布谷鸟过滤器源于布谷鸟Hash算法，布谷鸟Hash表有<strong>两张</strong>，分别为两个hash函数。</p>
+</li>
+<li><p>当有新数据插入的时候，它会计算出这个数据在两张表中对应的两个位置，这个数据一定会被存储在这<strong>两个位置之一（表1或表2）</strong>。</p>
+</li>
+<li><p>一旦发现其中一张表的位置被占，就将该位置的数据踢出，被踢出的数据就去另一张表找对应的位置。通过不断的踢出数据，最终所有数据都找到了自己的归宿。</p>
+</li>
+<li><p>但仍可能会有数据不断被踢出，最终形成循环，<strong>总有一个数据无法找到落脚的位置</strong>，这代表布谷Hash表走到了极限，需要<strong>Hash算法优化或Hash表扩容</strong>。</p>
+</li>
+</ul>
+<blockquote>
+<p>布谷鸟过滤器只会存储元素的指纹信息（<strong>几个bit，类似于布隆过滤器</strong>），由于不是存储了数据的所有信息，会有误判的可能。</p>
+</blockquote>
+<ul>
+<li><p>由于布谷鸟过滤器在踢出数据时，需要再次计算原数据在另一张表的Hash值。</p>
+</li>
+<li><p>因此作者设计Hash算法时将两个Hash函数<strong>变成了一个Hash函数</strong>。第一张表的<strong>备选位置是Hash(x)<strong>，第二张表的</strong>备选位置是Hash(x)异或Hash(fingerprint(x))，即第一张表的位置与存储的指的Hash值做异或运算</strong>。这样可以直接用<strong>指纹的值</strong>异或<strong>原来位置的Hash值</strong>来计算出另一张表的位置。</p>
+</li>
+</ul>
+<h5 id="优缺点"><a href="#优缺点" class="headerlink" title="优缺点"></a>优缺点</h5><p>布谷鸟过滤器在<strong>错误率小于3%<strong>的时候空间性能是优于布隆过滤器的，而这个条件在实际应用中常常满足，所以一般来说它的</strong>空间性能是要优于布隆过滤器的</strong>。</p>
+<p>布谷鸟按照普通设计，只有两个Hash表，在查找的时候可以确保两次访问就可以做完，相比于布隆的k个 Hash 函数 K 次访问，在数据量很大不能全部装载在内存的情况下，多次访问内存性能较差。</p>
+<p><strong>当然，布谷鸟也有响应的缺陷，当填充次数过多的时候，容易出现循环问题，即插入失败的情况。另外，布谷鸟和布隆共有一个缺点，就是访问空间地址不连续，内存寻址消耗大。</strong></p>
+<p><strong>综上</strong></p>
+<ul>
+<li><p><strong>优点</strong></p>
+<ul>
+<li>访问内存次数较低</li>
+<li>Hash函数计算较简单</li>
+</ul>
+</li>
+<li><p><strong>缺点</strong></p>
+<ul>
+<li>内存空间不连续，CPU消耗大</li>
+<li>容易出现挤兑循环问题</li>
+<li>删除数据时，Hash冲突会引起误删</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h4 id="2-优化"><a href="#2-优化" class="headerlink" title="2.优化"></a>2.优化</h4><p><strong>布谷鸟Hash算法的平均空间利用率不高，大概只有50%。达到这个百分比，就会很快出现连续挤兑次数超出阈值。</strong></p>
+<ul>
+<li><p><strong>改良方案一：</strong></p>
+<ul>
+<li>增加Hash函数，让每个元素不只有两个巢。<strong>这样可以大大降低碰撞的概率，将空间利用率提高到95%左右。</strong></li>
+</ul>
+</li>
+<li><p><strong>改良方案二：</strong></p>
+<ul>
+<li>在数组的每个位置上挂上多个座位，这样即使两个元素被hash在了同一个位置，也不必立即踢出原数据，因为这里有多个座位，你可以随意坐一个。这样可以<strong>显著降低挤兑次数</strong>。</li>
+<li><strong>这种方案的空间利用率只有85%左右，但是查询效率会很高，同一个位置上的多个座位的内存空间是连续的，可以有效利用CPU高速缓存。</strong></li>
+</ul>
+</li>
+</ul>
+<hr>
+<h4 id="3-特殊的hash函数"><a href="#3-特殊的hash函数" class="headerlink" title="3.特殊的hash函数"></a>3.特殊的hash函数</h4><p>布谷鸟过滤器巧妙的地方在于设计了一个独特的hash函数，可以根据<strong>p1</strong>和<strong>元素指纹</strong>直接计算出<strong>p2</strong>，而不需要完整的x元素。</p>
+<p>fp = fingerprint(x)</p>
+<p>p1 = hash(x)</p>
+<p>p2 = p1 ^ hash(fp)  // p1 异或 hash(fp)  对偶性</p>
+<ul>
+<li><p>不需要知道当前位置是p1还是p2，只需要将当前的位置和hash(fp)进行异或运算就可以计算出对偶位置。</p>
+</li>
+<li><p><strong>而且只需要保证hash(fp) != 0 就可以确保p1 != p2，如此就不会出现自己踢自己导致的死循环问题。</strong></p>
+</li>
+<li><p>也许你会问为什么这里的 hash 函数不需要对数组的长度取模呢？实际上是需要的，但是布谷鸟过滤器强制数组的长度必须是 2 的指数，所以对数组的长度取模等价于取 hash 值得最后 n 位。在进行异或运算时，忽略掉低 n 位 之外的其它位就行。将计算出来的位置 p 保留低 n 位就是最终的对偶位置。</p>
+</li>
+</ul>
 
       
 
@@ -239,6 +379,17 @@
     <div class="article-info article-info-index">
       
       
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">-NOTE</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
       
 
       
@@ -289,7 +440,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=http://example.com/2021/09/27/hello-world/" alt="微信分享二维码">
+      <img src="//pan.baidu.com/share/qrcode?url=http://example.com/2021/12/11/%E5%B8%83%E9%9A%86-%E5%B8%83%E8%B0%B7%E9%B8%9F%E8%BF%87%E6%BB%A4%E5%99%A8/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -303,15 +454,11 @@
   
 <nav id="article-nav">
   
-    <a href="/2021/09/27/Guava-1-%E6%A6%82%E8%AE%BA/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          Guava-1:概论
-        
-      </div>
-    </a>
   
+    <a href="/2021/11/16/Kafka%E5%85%A5%E9%97%A8%E5%AD%A6%E4%B9%A0/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Kafka入门学习</div>
+      <i class="icon-circle-right"></i>
+    </a>
   
 </nav>
 
@@ -336,7 +483,7 @@
                 </span>
                 <span class="tooltip-content">
                     <div class="toc-article">
-                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Quick-Start"><span class="toc-number">1.</span> <span class="toc-text">Quick Start</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Create-a-new-post"><span class="toc-number">1.1.</span> <span class="toc-text">Create a new post</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Run-server"><span class="toc-number">1.2.</span> <span class="toc-text">Run server</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Generate-static-files"><span class="toc-number">1.3.</span> <span class="toc-text">Generate static files</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Deploy-to-remote-sites"><span class="toc-number">1.4.</span> <span class="toc-text">Deploy to remote sites</span></a></li></ol></li></ol>
+                    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E5%B8%83%E9%9A%86%E5%92%8C%E5%B8%83%E8%B0%B7%E9%B8%9F%E7%9A%84%E5%BC%82%E5%90%8C"><span class="toc-number">1.</span> <span class="toc-text">一、布隆和布谷鸟的异同</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%90%8C%EF%BC%9A"><span class="toc-number">1.1.</span> <span class="toc-text">同：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%BC%82%EF%BC%9A"><span class="toc-number">1.2.</span> <span class="toc-text">异：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%80%BB%E7%BB%93%EF%BC%88%E5%B8%83%E9%9A%86%E7%9B%B8%E5%AF%B9%E4%BA%8E%E5%B8%83%E8%B0%B7%E9%B8%9F%E7%9A%84%E4%B8%8D%E8%B6%B3%EF%BC%89%EF%BC%9A"><span class="toc-number">1.3.</span> <span class="toc-text">总结（布隆相对于布谷鸟的不足）：</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E5%B8%83%E9%9A%86%E8%BF%87%E6%BB%A4%E5%99%A8%EF%BC%88Bloom-Filter%EF%BC%89"><span class="toc-number">2.</span> <span class="toc-text">二、布隆过滤器（Bloom Filter）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-%E7%AE%80%E4%BB%8B"><span class="toc-number">2.1.</span> <span class="toc-text">1.简介</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%B8%83%E9%9A%86%E8%BF%87%E6%BB%A4%E5%99%A8%E7%9A%84%E4%BC%98%E7%82%B9"><span class="toc-number">2.1.1.</span> <span class="toc-text">布隆过滤器的优点</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%B8%83%E9%9A%86%E8%BF%87%E6%BB%A4%E5%99%A8%E7%9A%84%E7%BC%BA%E7%82%B9"><span class="toc-number">2.1.2.</span> <span class="toc-text">布隆过滤器的缺点</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="toc-number">2.2.</span> <span class="toc-text">2.使用场景</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-%E5%8E%9F%E7%90%86"><span class="toc-number">2.3.</span> <span class="toc-text">3.原理</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#3-1-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="toc-number">2.3.1.</span> <span class="toc-text">3.1 数据结构</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3-2-%E7%A9%BA%E9%97%B4%E8%AE%A1%E7%AE%97"><span class="toc-number">2.3.2.</span> <span class="toc-text">3.2 空间计算</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3-3-%E5%A2%9E%E5%8A%A0%E5%85%83%E7%B4%A0"><span class="toc-number">2.3.3.</span> <span class="toc-text">3.3 增加元素</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3-4-%E6%9F%A5%E8%AF%A2%E5%85%83%E7%B4%A0"><span class="toc-number">2.3.4.</span> <span class="toc-text">3.4 查询元素</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3-5-%E5%88%A0%E9%99%A4%E5%85%83%E7%B4%A0"><span class="toc-number">2.3.5.</span> <span class="toc-text">3.5 删除元素</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3-6-%E4%BF%AE%E6%94%B9%E5%85%83%E7%B4%A0"><span class="toc-number">2.3.6.</span> <span class="toc-text">3.6 修改元素</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E5%B8%83%E8%B0%B7%E9%B8%9F%E8%BF%87%E6%BB%A4%E5%99%A8%EF%BC%88Cuckoo-Filter%EF%BC%89"><span class="toc-number">3.</span> <span class="toc-text">三、布谷鸟过滤器（Cuckoo Filter）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-%E7%AE%80%E4%BB%8B-1"><span class="toc-number">3.1.</span> <span class="toc-text">1.简介</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%BC%98%E7%BC%BA%E7%82%B9"><span class="toc-number">3.1.1.</span> <span class="toc-text">优缺点</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-%E4%BC%98%E5%8C%96"><span class="toc-number">3.2.</span> <span class="toc-text">2.优化</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-%E7%89%B9%E6%AE%8A%E7%9A%84hash%E5%87%BD%E6%95%B0"><span class="toc-number">3.3.</span> <span class="toc-text">3.特殊的hash函数</span></a></li></ol></li></ol>
                     </div>
                 </span>
             </div>
