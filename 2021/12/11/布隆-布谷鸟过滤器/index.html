@@ -16,7 +16,7 @@
 <meta property="og:description" content="学习过滤器，不包含使用方式（Redis集成，Guava内置布隆等）。">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2021-12-11T06:32:56.000Z">
-<meta property="article:modified_time" content="2021-12-11T12:47:34.610Z">
+<meta property="article:modified_time" content="2021-12-11T14:03:28.465Z">
 <meta property="article:author" content="nowinkey">
 <meta property="article:tag" content="-NOTE">
 <meta name="twitter:card" content="summary">
@@ -65,7 +65,7 @@
 			</ul>
 		</nav>
 		<nav>
-			总文章数 11
+			总文章数 12
 		</nav>
 		<nav class="header-smart-menu">
     		
@@ -215,6 +215,7 @@
 <li><strong>查询性能弱</strong></li>
 <li><strong>空间效率低</strong></li>
 <li><strong>不支持反向删除操作</strong></li>
+<li><strong>不支持计数</strong></li>
 </ul>
 <hr>
 <h3 id="二、布隆过滤器（Bloom-Filter）"><a href="#二、布隆过滤器（Bloom-Filter）" class="headerlink" title="二、布隆过滤器（Bloom Filter）"></a>二、布隆过滤器（Bloom Filter）</h3><h4 id="1-简介"><a href="#1-简介" class="headerlink" title="1.简介"></a>1.简介</h4><blockquote>
@@ -325,15 +326,17 @@
 <hr>
 <h4 id="2-优化"><a href="#2-优化" class="headerlink" title="2.优化"></a>2.优化</h4><p><strong>布谷鸟Hash算法的平均空间利用率不高，大概只有50%。达到这个百分比，就会很快出现连续挤兑次数超出阈值。</strong></p>
 <ul>
-<li><p><strong>改良方案一：</strong></p>
-<ul>
+<li><strong>改良方案一：</strong><ul>
 <li>增加Hash函数，让每个元素不只有两个巢。<strong>这样可以大大降低碰撞的概率，将空间利用率提高到95%左右。</strong></li>
 </ul>
 </li>
-<li><p><strong>改良方案二：</strong></p>
-<ul>
+<li><strong>改良方案二：</strong><ul>
 <li>在数组的每个位置上挂上多个座位，这样即使两个元素被hash在了同一个位置，也不必立即踢出原数据，因为这里有多个座位，你可以随意坐一个。这样可以<strong>显著降低挤兑次数</strong>。</li>
 <li><strong>这种方案的空间利用率只有85%左右，但是查询效率会很高，同一个位置上的多个座位的内存空间是连续的，可以有效利用CPU高速缓存。</strong></li>
+</ul>
+</li>
+<li><strong>改良方案三：</strong><ul>
+<li>将方案一和方案二融合起来，比如使用4个hash函数，每个位置放2个座位。<strong>这样既可以得到时间效率，又可以得到空间效率</strong>。这样的组合甚至可以将空间利用率提高到99%，这是非常了不起的空间效率。</li>
 </ul>
 </li>
 </ul>
@@ -350,6 +353,23 @@
 <li><p>也许你会问为什么这里的 hash 函数不需要对数组的长度取模呢？实际上是需要的，但是布谷鸟过滤器强制数组的长度必须是 2 的指数，所以对数组的长度取模等价于取 hash 值得最后 n 位。在进行异或运算时，忽略掉低 n 位 之外的其它位就行。将计算出来的位置 p 保留低 n 位就是最终的对偶位置。</p>
 </li>
 </ul>
+<hr>
+<h3 id="四、布谷鸟真的这么好吗？"><a href="#四、布谷鸟真的这么好吗？" class="headerlink" title="四、布谷鸟真的这么好吗？"></a>四、布谷鸟真的这么好吗？</h3><p>不支持反向删除确实击中了布隆过滤器的软肋。</p>
+<p>在一个动态的系统里面元素总是不断的来，同时不断的走。布隆过滤器就好比印迹，来过就有痕迹，即使走了也无法清理干净。直到布隆过滤器越发拥挤，直到它的误判率太高了，你不得不重建了。</p>
+<blockquote>
+<p>布谷鸟过滤器并没有它声称的那么美好。它支持的反向删除操作非常鸡肋，以至于你根本没办法使用这个功能。</p>
+</blockquote>
+<p><strong>考虑一下，如果布谷鸟过滤器对同一个元素进行多次连续的插入会怎样？</strong></p>
+<p>根据上面的逻辑，毫无疑问，这个元素的指纹会霸占两个位置上的所有座位 —— 8个座位。这 8 个座位上的值都是一样的，都是这个元素的指纹。如果继续插入，则会立即出现挤兑循环。从 p1 槽挤向 p2 槽，又从 p2 槽挤向 p1 槽。</p>
+<p>也许你会想到，能不能在插入之前做一次检查，询问一下过滤器中是否已经存在这个元素了？这样确实可以解决问题，插入同样的元素也不会出现挤兑循环了。但是删除的时候会出现高概率的误删。因为不同的元素被 hash 到同一个位置的可能性还是很大的，而且指纹只有一个字节，256 种可能，同一个位置出现相同的指纹可能性也很大。如果两个元素的 hash 位置相同，指纹相同，那么这个插入检查会认为它们是相等的。</p>
+<p>插入 x，检查时会认为包含 y。因为这个检查机制会导致只会存储一份指纹（x 的指纹）。那么删除 y 也等价于删除 x。这就会导致较高的误判率。</p>
+<blockquote>
+<p>Limited Duplicates:If the cuckoo filter supports deletion,<br>it must store multiple copies of the same item. Inserting the<br>same item kb + 1 times will cause the insertion to fail. This<br>is similar to counting Bloom filters where duplicate insertion<br>causes counter overflow.However,there is no effect from<br>inserting identical items multiple times into Bloom i<br>filters, or a non-deletable cuckoo filter.</p>
+</blockquote>
+<p><strong>这句话明确告诉我们如果想要让布谷鸟过滤器支持删除操作，那么就必须不能允许插入操作多次插入同一个元素，确保每一个元素不会被插入多次（kb+1）。这里的 k 是指 hash 函数的个数 2，b 是指单个位置上的座位数，这里我们是 4。</strong></p>
+<p><strong>在现实世界的应用中，确保一个元素不被插入指定的次数那几乎是不可能做到的。如果你觉得可以做到，请思考一下要如何做！你是不是还得维护一个外部的字典来记录每个元素的插入次数呢？这个外部字典的存储空间怎么办？</strong></p>
+<p><strong>因为不能完美的支持删除操作，所以也就无法较为准确地估计内部的元素数量。</strong></p>
+<p><strong>如果不支持删除操作，那么布谷鸟过滤器单纯从空间效率上来说还是有一定的可比性的。这确实比布隆过滤器做的要好一点，但是布谷鸟过滤器这必须的2的指数的空间需求又再次让空间效率打了个折扣。</strong></p>
 
       
 
@@ -454,6 +474,15 @@
   
 <nav id="article-nav">
   
+    <a href="/2021/12/20/Redis%E5%BA%95%E5%B1%82%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          Redis底层数据结构
+        
+      </div>
+    </a>
+  
   
     <a href="/2021/11/16/Kafka%E5%85%A5%E9%97%A8%E5%AD%A6%E4%B9%A0/" id="article-nav-older" class="article-nav-link-wrap">
       <div class="article-nav-title">Kafka入门学习</div>
@@ -483,7 +512,7 @@
                 </span>
                 <span class="tooltip-content">
                     <div class="toc-article">
-                    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E5%B8%83%E9%9A%86%E5%92%8C%E5%B8%83%E8%B0%B7%E9%B8%9F%E7%9A%84%E5%BC%82%E5%90%8C"><span class="toc-number">1.</span> <span class="toc-text">一、布隆和布谷鸟的异同</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%90%8C%EF%BC%9A"><span class="toc-number">1.1.</span> <span class="toc-text">同：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%BC%82%EF%BC%9A"><span class="toc-number">1.2.</span> <span class="toc-text">异：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%80%BB%E7%BB%93%EF%BC%88%E5%B8%83%E9%9A%86%E7%9B%B8%E5%AF%B9%E4%BA%8E%E5%B8%83%E8%B0%B7%E9%B8%9F%E7%9A%84%E4%B8%8D%E8%B6%B3%EF%BC%89%EF%BC%9A"><span class="toc-number">1.3.</span> <span class="toc-text">总结（布隆相对于布谷鸟的不足）：</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E5%B8%83%E9%9A%86%E8%BF%87%E6%BB%A4%E5%99%A8%EF%BC%88Bloom-Filter%EF%BC%89"><span class="toc-number">2.</span> <span class="toc-text">二、布隆过滤器（Bloom Filter）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-%E7%AE%80%E4%BB%8B"><span class="toc-number">2.1.</span> <span class="toc-text">1.简介</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%B8%83%E9%9A%86%E8%BF%87%E6%BB%A4%E5%99%A8%E7%9A%84%E4%BC%98%E7%82%B9"><span class="toc-number">2.1.1.</span> <span class="toc-text">布隆过滤器的优点</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%B8%83%E9%9A%86%E8%BF%87%E6%BB%A4%E5%99%A8%E7%9A%84%E7%BC%BA%E7%82%B9"><span class="toc-number">2.1.2.</span> <span class="toc-text">布隆过滤器的缺点</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="toc-number">2.2.</span> <span class="toc-text">2.使用场景</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-%E5%8E%9F%E7%90%86"><span class="toc-number">2.3.</span> <span class="toc-text">3.原理</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#3-1-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="toc-number">2.3.1.</span> <span class="toc-text">3.1 数据结构</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3-2-%E7%A9%BA%E9%97%B4%E8%AE%A1%E7%AE%97"><span class="toc-number">2.3.2.</span> <span class="toc-text">3.2 空间计算</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3-3-%E5%A2%9E%E5%8A%A0%E5%85%83%E7%B4%A0"><span class="toc-number">2.3.3.</span> <span class="toc-text">3.3 增加元素</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3-4-%E6%9F%A5%E8%AF%A2%E5%85%83%E7%B4%A0"><span class="toc-number">2.3.4.</span> <span class="toc-text">3.4 查询元素</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3-5-%E5%88%A0%E9%99%A4%E5%85%83%E7%B4%A0"><span class="toc-number">2.3.5.</span> <span class="toc-text">3.5 删除元素</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3-6-%E4%BF%AE%E6%94%B9%E5%85%83%E7%B4%A0"><span class="toc-number">2.3.6.</span> <span class="toc-text">3.6 修改元素</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E5%B8%83%E8%B0%B7%E9%B8%9F%E8%BF%87%E6%BB%A4%E5%99%A8%EF%BC%88Cuckoo-Filter%EF%BC%89"><span class="toc-number">3.</span> <span class="toc-text">三、布谷鸟过滤器（Cuckoo Filter）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-%E7%AE%80%E4%BB%8B-1"><span class="toc-number">3.1.</span> <span class="toc-text">1.简介</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%BC%98%E7%BC%BA%E7%82%B9"><span class="toc-number">3.1.1.</span> <span class="toc-text">优缺点</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-%E4%BC%98%E5%8C%96"><span class="toc-number">3.2.</span> <span class="toc-text">2.优化</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-%E7%89%B9%E6%AE%8A%E7%9A%84hash%E5%87%BD%E6%95%B0"><span class="toc-number">3.3.</span> <span class="toc-text">3.特殊的hash函数</span></a></li></ol></li></ol>
+                    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E5%B8%83%E9%9A%86%E5%92%8C%E5%B8%83%E8%B0%B7%E9%B8%9F%E7%9A%84%E5%BC%82%E5%90%8C"><span class="toc-number">1.</span> <span class="toc-text">一、布隆和布谷鸟的异同</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%90%8C%EF%BC%9A"><span class="toc-number">1.1.</span> <span class="toc-text">同：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%BC%82%EF%BC%9A"><span class="toc-number">1.2.</span> <span class="toc-text">异：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%80%BB%E7%BB%93%EF%BC%88%E5%B8%83%E9%9A%86%E7%9B%B8%E5%AF%B9%E4%BA%8E%E5%B8%83%E8%B0%B7%E9%B8%9F%E7%9A%84%E4%B8%8D%E8%B6%B3%EF%BC%89%EF%BC%9A"><span class="toc-number">1.3.</span> <span class="toc-text">总结（布隆相对于布谷鸟的不足）：</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E5%B8%83%E9%9A%86%E8%BF%87%E6%BB%A4%E5%99%A8%EF%BC%88Bloom-Filter%EF%BC%89"><span class="toc-number">2.</span> <span class="toc-text">二、布隆过滤器（Bloom Filter）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-%E7%AE%80%E4%BB%8B"><span class="toc-number">2.1.</span> <span class="toc-text">1.简介</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%B8%83%E9%9A%86%E8%BF%87%E6%BB%A4%E5%99%A8%E7%9A%84%E4%BC%98%E7%82%B9"><span class="toc-number">2.1.1.</span> <span class="toc-text">布隆过滤器的优点</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%B8%83%E9%9A%86%E8%BF%87%E6%BB%A4%E5%99%A8%E7%9A%84%E7%BC%BA%E7%82%B9"><span class="toc-number">2.1.2.</span> <span class="toc-text">布隆过滤器的缺点</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="toc-number">2.2.</span> <span class="toc-text">2.使用场景</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-%E5%8E%9F%E7%90%86"><span class="toc-number">2.3.</span> <span class="toc-text">3.原理</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#3-1-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="toc-number">2.3.1.</span> <span class="toc-text">3.1 数据结构</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3-2-%E7%A9%BA%E9%97%B4%E8%AE%A1%E7%AE%97"><span class="toc-number">2.3.2.</span> <span class="toc-text">3.2 空间计算</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3-3-%E5%A2%9E%E5%8A%A0%E5%85%83%E7%B4%A0"><span class="toc-number">2.3.3.</span> <span class="toc-text">3.3 增加元素</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3-4-%E6%9F%A5%E8%AF%A2%E5%85%83%E7%B4%A0"><span class="toc-number">2.3.4.</span> <span class="toc-text">3.4 查询元素</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3-5-%E5%88%A0%E9%99%A4%E5%85%83%E7%B4%A0"><span class="toc-number">2.3.5.</span> <span class="toc-text">3.5 删除元素</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3-6-%E4%BF%AE%E6%94%B9%E5%85%83%E7%B4%A0"><span class="toc-number">2.3.6.</span> <span class="toc-text">3.6 修改元素</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E5%B8%83%E8%B0%B7%E9%B8%9F%E8%BF%87%E6%BB%A4%E5%99%A8%EF%BC%88Cuckoo-Filter%EF%BC%89"><span class="toc-number">3.</span> <span class="toc-text">三、布谷鸟过滤器（Cuckoo Filter）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-%E7%AE%80%E4%BB%8B-1"><span class="toc-number">3.1.</span> <span class="toc-text">1.简介</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%BC%98%E7%BC%BA%E7%82%B9"><span class="toc-number">3.1.1.</span> <span class="toc-text">优缺点</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-%E4%BC%98%E5%8C%96"><span class="toc-number">3.2.</span> <span class="toc-text">2.优化</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-%E7%89%B9%E6%AE%8A%E7%9A%84hash%E5%87%BD%E6%95%B0"><span class="toc-number">3.3.</span> <span class="toc-text">3.特殊的hash函数</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E5%B8%83%E8%B0%B7%E9%B8%9F%E7%9C%9F%E7%9A%84%E8%BF%99%E4%B9%88%E5%A5%BD%E5%90%97%EF%BC%9F"><span class="toc-number">4.</span> <span class="toc-text">四、布谷鸟真的这么好吗？</span></a></li></ol>
                     </div>
                 </span>
             </div>
@@ -512,7 +541,7 @@
   <div class="outer">
     <div id="footer-info">
     	<div class="footer-left">
-    		&copy; 2021 nowinkey
+    		&copy; 2022 nowinkey
     	</div>
       	<div class="footer-right">
       		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
