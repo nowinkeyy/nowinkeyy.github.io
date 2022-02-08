@@ -62,7 +62,7 @@
 			</ul>
 		</nav>
 		<nav>
-			总文章数 13
+			总文章数 14
 		</nav>
 		<nav class="header-smart-menu">
     		
@@ -156,6 +156,325 @@
           </div>
           <div id="js-content" class="content-ll">
             
+  
+    <article id="post-MySQL必知必会" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2022/02/09/MySQL%E5%BF%85%E7%9F%A5%E5%BF%85%E4%BC%9A/">MySQL必知必会</a>
+    </h1>
+  
+
+		<!--显示阅读次数-->
+		
+		<!--显示阅读次数完毕-->
+        
+        <a href="/2022/02/09/MySQL%E5%BF%85%E7%9F%A5%E5%BF%85%E4%BC%9A/" class="archive-article-date">
+  	<time datetime="2022-02-08T18:19:49.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-02-09</time>
+</a>
+
+
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <blockquote>
+<p>《MySQL必知必会》笔记，仅包含部分内容（全文本搜索、触发器、事务）</p>
+</blockquote>
+<h3 id="1、简介"><a href="#1、简介" class="headerlink" title="1、简介"></a>1、简介</h3><p><strong>MySQL广泛使用的原因</strong></p>
+<ul>
+<li><p>成本——MySQL是开放源代码的，一般可以免费使用（甚至可以免费修改）。</p>
+</li>
+<li><p>性能——MySQL执行很快（非常快）。</p>
+</li>
+<li><p>可信赖——某些非常重要和声望很高的公司、站点使用MySQL，这些公司和站点都用MySQL来处理自己的重要数据。</p>
+</li>
+<li><p>简单——MySQL很容易安装和使用</p>
+</li>
+</ul>
+<p>事实上，MySQL受到的唯一真正的批评是它并不总是支持其他DBMS提供的功能和特性。然而，这一点也正在逐步得到改善，MySQL的各个新版本正不断增加新特性、新功能。</p>
+<hr>
+<h3 id="2、全文本搜索"><a href="#2、全文本搜索" class="headerlink" title="2、全文本搜索"></a>2、全文本搜索</h3><h4 id="2-1-简介"><a href="#2-1-简介" class="headerlink" title="2.1.简介"></a>2.1.简介</h4><blockquote>
+<p>MyISAM引擎支持全文本搜索，而InnoDB引擎不支持。</p>
+</blockquote>
+<p><strong>LIKE关键字</strong>，可以利用通配操作符匹配文本（和部分文本）。使用LIKE，能够查找包含特殊值或部分值的行（不管这些值位于列内什么位置）。</p>
+<p><strong>正则表达式</strong>，可以编写查找所需行的非常复杂的匹配模式。</p>
+<p><strong>虽然这些搜索机制非常有用，但存在几个重要的限制。</strong></p>
+<ul>
+<li><p><strong>性能</strong>——通配符和正则表达式匹配通常要求MySQL尝试匹配表中所有行（而且这些搜索极少使用表索引）。因此，由于被搜索行数不断增加，这些搜索可能非常耗时。</p>
+</li>
+<li><p><strong>明确控制</strong>——使用通配符和正则表达式匹配，很难（而且并不总是能）明确地控制匹配什么和不匹配什么。例如：指定一个词必须匹配，一个词必须不匹配，而一个词仅在第一个词确实匹配的情况下才可以匹配或者才可以不匹配。</p>
+</li>
+<li><p><strong>智能化结果</strong>——虽然基于通配符和正则表达式的搜索提供了非常灵活的搜索，但它们都不能提供一种智能化的选择结果的方法。例如，一个特殊词的搜索将会返回包含该词的所有行，而不区分包含单个匹配的行和包含多个匹配的行（按照可能是更好的匹配来排列它们）。类似，一个特殊词的搜索将不会找出不包含该词但包含其他相关词的行。</p>
+</li>
+</ul>
+<p>所有这些限制以及更多的限制都可以用全文本搜索来解决。在使用全文本搜索时，MySQL不需要分别查看每个行，不需要分别分析和处理每个词。MySQL创建指定列中各词的一个索引，搜索可以针对这些词进行。这样，MySQL可以快速有效地决定哪些词匹配（哪些行包含它们），哪些词不匹配，它们匹配的频率，等等。</p>
+<p><strong>不要在导入数据时使用FULLTEXT</strong></p>
+<ul>
+<li>更新索引要花时间，虽然不是很多，但毕竟要花时间。如果正在导入数据到一个新表，此时不应该启用FULLTEXT索引。应该首先导入所有数据，然后再修改表，定义FULLTEXT。这样有助于更快地导入数据（而且使索引数据的总时间小于在导入每行时分别进行索引所需的总时间）。</li>
+</ul>
+<hr>
+<h4 id="2-2-实操"><a href="#2-2-实操" class="headerlink" title="2.2.实操"></a>2.2.实操</h4><p>在索引之后，使用两个函数<strong>Match()</strong> 和<strong>Against()</strong> 执行全文本搜索，其中<strong>Match()</strong> 指定被搜索的列，<strong>Against()</strong> 指定要使用的搜索表达式。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">SELECT note_text</span><br><span class="line">FROM productnotes</span><br><span class="line">WHERE Match(note_text) Against(&#x27;rabbit&#x27;);</span><br><span class="line">// 此SELECT语句检索单个列note_text。由于WHERE子句，一个全文本搜索被执行。Match(note_text)指示MySQL针对指定的列进行搜索，Against(&#x27;rabbit&#x27;)指定词rabbit作为搜索文本。由于有两行包含词rabbit，这两个行被返回</span><br></pre></td></tr></table></figure>
+
+<p><strong>使用完整的Match()说明</strong>  </p>
+<ul>
+<li>传递给 Match()的值必须与FULLTEXT()定义中的相同。如果指定多个列，则必须列出它们（而且次序正确）</li>
+</ul>
+<p><strong>搜索不区分大小写</strong></p>
+<ul>
+<li>除非使用BINARY方式，否则全文本搜索不区分大小写。</li>
+</ul>
+<p><strong>全文本搜索的一个重要部分就是对结果排序。具有较高等级的行先返回。（包含词rabbit作为<br>第3个词的行的等级比作为第20个词的行高。）</strong></p>
+<ul>
+<li><strong>等级由MySQL根据行中词的数目、唯一词的数目、整个索引中词的总数以及包含该词的行的数目计算出来。</strong></li>
+</ul>
+<p><strong>排序多个搜索项</strong></p>
+<ul>
+<li>如果指定多个搜索项，则包含多数匹配词的那些行将具有比包含较少词（或仅有一个匹配）的那些行高的等级值。</li>
+</ul>
+<hr>
+<p><strong>布尔文本搜索</strong></p>
+<ul>
+<li><p>要匹配的词；</p>
+</li>
+<li><p>要排斥的词（如果某行包含这个词，则不返回该行，即使它包含其他指定的词也是如此）</p>
+</li>
+<li><p>排列提示（指定某些词比其他词更重要，更重要的词等级更高）</p>
+</li>
+<li><p>表达式分组；</p>
+</li>
+<li><p>另外一些内容。</p>
+</li>
+</ul>
+<p><strong>即使没有FULLTEXT索引也可以使用</strong></p>
+<p>布尔方式不同于迄今为止使用的全文本搜索语法的地方在于，即使没有定义FULLTEXT索引，也可以使用它。但这是一种非常缓慢的操作（其性能将随着数据量的增加而降低）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">SELECT note_text</span><br><span class="line">FROM productnotes</span><br><span class="line">WHERE Match(note_text) Against(&#x27;heavy -rope*&#x27; IN BOOLEAN MODE);</span><br><span class="line">// -rope*明确地指示MySQL排除包含rope*（任何以rope开始的词，包括ropes）的行。</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>布尔操作符</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>+</td>
+<td>包含，词必须出现</td>
+</tr>
+<tr>
+<td>-</td>
+<td>排除，词必须不出现</td>
+</tr>
+<tr>
+<td>&gt;</td>
+<td>包含，而且增加等级值</td>
+</tr>
+<tr>
+<td>&lt;</td>
+<td>包含，且减少等级值</td>
+</tr>
+<tr>
+<td>( )</td>
+<td>把词组成子表达式（允许这些子表达式作为一个组被包含、排除、排列等）</td>
+</tr>
+<tr>
+<td>~</td>
+<td>取消一个词的排序值</td>
+</tr>
+<tr>
+<td>*</td>
+<td>词尾的通配符</td>
+</tr>
+<tr>
+<td>“”</td>
+<td>定义一个短语（与单个词的列表不一样，它匹配整个短语以便包含或排除这个短语）</td>
+</tr>
+</tbody></table>
+<hr>
+<h3 id="3、触发器"><a href="#3、触发器" class="headerlink" title="3、触发器"></a>3、触发器</h3><h4 id="3-1-简介"><a href="#3-1-简介" class="headerlink" title="3.1.简介"></a>3.1.简介</h4><p><strong>如果想要某条语句（或某些语句）在事件发生时自动执行，该怎么办？例如以下情况：</strong></p>
+<ul>
+<li><p>每当增加一个顾客到某个数据库表时，都检查其电话号码格式是否正确，州的缩写是否为大写；</p>
+</li>
+<li><p>每当订购一个产品时，都从库存数量中减去订购的数量；</p>
+</li>
+<li><p>无论何时删除一行，都在某个存档表中保留一个副本。</p>
+</li>
+</ul>
+<p>以上的例子都需要某个表发生更改时<strong>自动处理</strong>。这时候我们就可以使用<strong>触发器。</strong></p>
+<p><strong>触发器支持的语句</strong></p>
+<ul>
+<li>INSERT、UPDATE、DELETE、位于BEGIN和END语句之间的一组语句。</li>
+</ul>
+<hr>
+<h4 id="3-2-创建触发器"><a href="#3-2-创建触发器" class="headerlink" title="3.2.创建触发器"></a>3.2.创建触发器</h4><p>创建触发器，需要给出4条信息：</p>
+<ul>
+<li>唯一的触发器名；</li>
+<li>触发器关联的表</li>
+<li>触发器应该响应的活动（INSERT、UPDATE、DELETE）</li>
+<li>触发器何时执行（BEFORE、AFTER）</li>
+</ul>
+<blockquote>
+<p><strong>保持每个数据库的触发器名唯一</strong><br>在MySQL 5中，触发器名必须在每个表中唯一，但不是在每个数据库中唯一。这表示同一数据库中的两个表可具有相同名字的触发器。这在其他每个数据库触发器名必须唯一的DBMS中是不允许的，而且以后的MySQL版本很可能会使命名规则更为严格。因此，现在最好是在数据库范围内使用唯一的触发器名。</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">// 触发器用 CREATE TRIGGER 语句创建</span><br><span class="line">CREATE TRIGGER newproduct AFTER INSERT ON products</span><br><span class="line">FOR EACH ROW SELECT &#x27;Product added&#x27;;</span><br><span class="line">// CREATE TRIGGER用来创建名为newproduct的新触发器。触发器可在一个操作发生之前或之后执行，这里给出了AFTERINSERT，所以此触发器将在INSERT语句成功执行后执行。这个触发器还指定FOREACH ROW，因此代码对每个插入行执行。在这个例子中，文本Productadded将对每个插入的行显示一次</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><strong>仅支持表</strong><br>只有表才支持触发器，视图不支持（临时表也不支持）</p>
+</blockquote>
+<p>触发器按每个表每个事件每次地定义，每个表每个事件每次只允许一个触发器。因此，每个表最多支持6个触发器（每条INSERT、UPDATE和DELETE的之前和之后）。单一触发器不能与多个事件或多个表关联，所以，如果你需要一个对INSERT和UPDATE操作执行的触发器，则应该定义两个触发器。</p>
+<blockquote>
+<p><strong>触发器失败</strong><br>如果BEFORE触发器失败，则MySQL将不执行请求的操作。此外，如果BEFORE触发器或语句本身失败，MySQL将不执行AFTER触发器（如果有的话）。</p>
+</blockquote>
+<hr>
+<h4 id="3-3-删除触发器"><a href="#3-3-删除触发器" class="headerlink" title="3.3.删除触发器"></a>3.3.删除触发器</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">// 删除触发器用 DROP TRIGGER 语句</span><br><span class="line">DROP TRIGGER newproduct;</span><br><span class="line">// 触发器不能更新或覆盖。为了修改一个触发器，必须先删除它，然后再重新创建</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h4 id="3-4-使用触发器（好像比较鸡肋）"><a href="#3-4-使用触发器（好像比较鸡肋）" class="headerlink" title="3.4.使用触发器（好像比较鸡肋）"></a>3.4.使用触发器（好像比较鸡肋）</h4><h5 id="3-4-1-INSERT触发器"><a href="#3-4-1-INSERT触发器" class="headerlink" title="3.4.1.INSERT触发器"></a>3.4.1.INSERT触发器</h5><p>INSERT触发器在INSERT语句执行之前或之后执行。需要知道以下几点：</p>
+<ul>
+<li><p>在 <strong>INSERT</strong> 触发器代码内，可引用一个名为 <strong>NEW</strong> 的虚拟表，访问被插入的行；</p>
+</li>
+<li><p>在 <strong>BEFORE INSERT</strong> 触发器中，<strong>NEW</strong> 中的值也可以被更新（允许更改被插入的值）；</p>
+</li>
+<li><p>对于 <strong>AUTO_INCREMENT</strong> 列，<strong>NEW</strong> 在 <strong>INSERT</strong> 执行之前包含0，在 <strong>INSERT</strong> 执行之后包含新的自动生成值。</p>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">// 创建一个名为 neworder 的触发器</span><br><span class="line">CREATE TRIGGER neworder AFTER INSERT ON orders</span><br><span class="line">FOR EACH ROW SELECT NEW.order_num;</span><br><span class="line">// 它按照 AFTER INSERT ON orders 执行。</span><br><span class="line">// 在插入一个新订单到orders表时，MySQL生成一个新订单号并保存到order_num中。</span><br><span class="line">// 触发器从NEW. order_num取得这个值并返回它。</span><br><span class="line"></span><br><span class="line">// 为测试该触发器，试着插入一下新行，如下所示</span><br><span class="line">INSERT INTO orders(order_date, cust_id)</span><br><span class="line">VALUES(Now(), 10001);</span><br><span class="line">// order_num 由MySQL自动生成（有AUTO_INCREMENT修饰），而现在 order_num 还自动被返回。</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><strong>BEFORE或AFTER</strong><br>通常，将BEFORE用于数据验证和净化（目的是保证插入表中的数据确实是需要的数据）。本提示也适用<br>于UPDATE触发器</p>
+</blockquote>
+<hr>
+<h5 id="3-4-2-DELETE触发器"><a href="#3-4-2-DELETE触发器" class="headerlink" title="3.4.2.DELETE触发器"></a>3.4.2.DELETE触发器</h5><p>DELETE 触发器在 DELETE 语句执行之前或之后执行。需要知道以下两点：</p>
+<ul>
+<li>在 DELETE 触发器代码内，可以引用一个名为 OLD 的虚拟表，访问被删除的行；</li>
+<li>OLD中的值全都是只读的，不能更新。</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">CREATE TRIGGER deleteorder BEFORE DELETE ON orders</span><br><span class="line">FOR EACH ROW</span><br><span class="line">BEGIN</span><br><span class="line">    INSERT INTO archive_order(order_num, order_date, cust_id)</span><br><span class="line">    VALUES(OLD.order_num, OLD.order_date, OLD.cust_id);</span><br><span class="line">END;</span><br><span class="line">// 在任意订单被删除前将执行此触发器。</span><br><span class="line">// 它使用一条 INSERT 语句将 OLD 中的值（要被删除的订单）保存到一个名为archive_ orders的存档表中</span><br></pre></td></tr></table></figure>
+
+<p><strong>使用BEFORE DELETE触发器的优点（相对于AFTER DELETE触发器来说）为，如果由于某种原因，订单不能存档，DELETE本身将被放弃。</strong></p>
+<blockquote>
+<p><strong>多语句触发器</strong><br>正如所见，触发器deleteorder使用BEGIN和END语句标记触发器体。这在此例子中并不是必需的，不过也没有害处。使用BEGIN END块的好处是触发器能容纳多条SQL语句（在BEGIN END块中一条挨着一条）</p>
+</blockquote>
+<hr>
+<h5 id="3-4-3-UPDATE触发器"><a href="#3-4-3-UPDATE触发器" class="headerlink" title="3.4.3.UPDATE触发器"></a>3.4.3.UPDATE触发器</h5><p>UPDATE 触发器在 UPDATE 语句执行之前或之后执行。需要知道以下几点：</p>
+<ul>
+<li>在 <strong>UPDATE</strong> 触发器代码中，你可以引用一个名为 <strong>OLD</strong> 的虚拟表访问以前（<strong>UPDATE</strong>语句前）的值，引用一个名为 <strong>NEW</strong> 的虚拟表访问新更新的值；</li>
+<li>在 <strong>BEFORE UPDATE</strong> 触发器中，<strong>NEW</strong> 中的值可能也被更新（允许更改将要用于 <strong>UPDATE</strong> 语句中的值）；</li>
+<li><strong>OLD</strong> 中的值全都是只读，不能更新。</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">// 下面的例子是保证州名缩写总是大写（不管 UPDATE 语句中给出的是大写还是小写）</span><br><span class="line">CREATE TRIGGER updatevendor BEFORE UPDATE ON vendors</span><br><span class="line">FOR EACH ROW SET NEW.vend_state = Upper(NEW.vend_state);</span><br><span class="line">// 显然，任何数据净化都需要在 UPDATE 语句之前进行，就像这个例子中一样。每次更新一个行时，NEW.vend_state 中的</span><br><span class="line">值（将用来更新表行的值）都用 Upper(NEW.vend_state)替换。</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h5 id="3-4-4-触发器的进一步介绍"><a href="#3-4-4-触发器的进一步介绍" class="headerlink" title="3.4.4.触发器的进一步介绍"></a>3.4.4.触发器的进一步介绍</h5><p><strong>重点：</strong></p>
+<ul>
+<li><p>与其他 <strong>DBMS</strong> 相比，MySQL 5中支持的触发器相当初级。未来MySQL版本中有一些改进和增加触发器支持的计划。</p>
+</li>
+<li><p>创建触发器可能需要特殊的安全访问权限，但是，触发器的执行是自动的。如果INSERT、UPDATE或DELETE语句能够执行，则相关的触发器也能执行。</p>
+</li>
+<li><p>应该用触发器来保证数据的一致性（大小写、格式等）。在触发器中执行这种类型的处理的优点是它总是进行这种处理，而且是透明地进行，与客户机应用无关。</p>
+</li>
+<li><p>触发器的一种非常有意义的使用是创建审计跟踪。使用触发器，把更改（如果需要，甚至还有之前和之后的状态）记录到另一个表非常容易。</p>
+</li>
+<li><p>遗憾的是，MySQL触发器中不支持CALL语句。这表示不能从触发器内调用存储过程。所需的存储过程代码需要复制到触发器内。</p>
+</li>
+</ul>
+<hr>
+<h3 id="4、事务处理"><a href="#4、事务处理" class="headerlink" title="4、事务处理"></a>4、事务处理</h3><h4 id="4-1-简介"><a href="#4-1-简介" class="headerlink" title="4.1.简介"></a>4.1.简介</h4><blockquote>
+<p><strong>InnoDB支持事务处理管理，而MyISAM不支持</strong></p>
+</blockquote>
+<p><strong>事务处理（transaction processing）可以用来维护数据库的完整性，它保证成批的MySQL操作要么完全执行，要么完全不执行。</strong></p>
+<p><strong>事务处理的术语：</strong></p>
+<ul>
+<li><strong>事务（transaction）</strong> 指一组SQL语句；</li>
+<li><strong>回退（rollback）</strong> 指撤销指定SQL语句的过程；</li>
+<li><strong>提交（commit）</strong> 指将未存储的SQL语句结果写入数据库表；</li>
+<li><strong>保留点（savepoint）</strong> 指事务处理中设置的临时占位符（place-holder），你可以对它发布回退（与回退整个事务处理不同）。</li>
+</ul>
+<hr>
+<h4 id="4-2-ROLLBACK"><a href="#4-2-ROLLBACK" class="headerlink" title="4.2.ROLLBACK"></a>4.2.ROLLBACK</h4><p><strong>ROLLBACK</strong> 只能在一个事务处理内使用（在执行一条 START TRANSACTIO命令之后）</p>
+<blockquote>
+<p><strong>哪些语句可以回退？</strong><br>事务处理用来管理 INSERT、UPDATE 和 DELETE语句。你不能回退 SELECT 语句。（这样做也没有什么意义）你不能回退 CREATE 或 DROP 操作。事务处理块中可以使用者两条语句，但如果你执行回退，它们不会被撤销。</p>
+</blockquote>
+<hr>
+<h4 id="4-3-COMMIT"><a href="#4-3-COMMIT" class="headerlink" title="4.3.COMMIT"></a>4.3.COMMIT</h4><p>一般的 MySQL 语句都是直接针对数据库表执行和编写的。这就是所谓的<strong>隐含提交（implicit commit）</strong>，即提交（写或保存）操作时自动进行的。</p>
+<p>但是，在事务处理块中，提交不会隐含地进行。为进行明确的提交，使用 <strong>COMMIT</strong> 语句，如下所示：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">START TRANSACTION;</span><br><span class="line">DELETE FROM orderitems WHERE order_num = 20010;</span><br><span class="line">DELETE FROM orders WHERE order_num = 20010;</span><br><span class="line">COMMIT;</span><br><span class="line">// 在这个例子中，从系统中完全删除订单20010。</span><br><span class="line">// 因为涉及更新两个数据库 orders 和 orderItems，所以使用事务处理块来保证订单不被部分删除。</span><br><span class="line">// 最后的 COMMIT 语句仅在不出错时写出更改。</span><br><span class="line">// 如果第一条 DELETE 起作用，但第二条失败，则 DELETE 不会提交（实际上，它是被自动撤销的）。</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>隐含事务关闭</strong><br>当 COMMIT 或 ROLLBACK 语句执行后，事务会自动关闭（将来的更改会隐含提交）。</p>
+</blockquote>
+<hr>
+<h4 id="4-4-SAVEPOINT"><a href="#4-4-SAVEPOINT" class="headerlink" title="4.4.SAVEPOINT"></a>4.4.SAVEPOINT</h4><p>简单的 <strong>ROLLBACK</strong> 和 <strong>COMMIT</strong> 语句就可以写入或撤销整个事务处理。但是，更复杂的事务处理可能需要部分提交或回退。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">// 创建占位符 delete1</span><br><span class="line">SAVEPOINT delete1；</span><br><span class="line">// 回退到该保留点</span><br><span class="line">ROLLBACK TO delete1;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><strong>保留点越多越好</strong><br>可以在 MySQL 代码中设置任意多的保留点，越多越好。越多，就越能按自己的意愿灵活地进行回退。</p>
+</blockquote>
+<blockquote>
+<p><strong>释放保留点</strong><br>保留点在事务处理完成（执行一条 ROLLBACK 或 COMMIT）后自动释放。自 MySQL 5以来，也可以用 RELEASE SAVEPOINT 明确地释放保留点。</p>
+</blockquote>
+<hr>
+<h4 id="4-5-更改默认的提交行为"><a href="#4-5-更改默认的提交行为" class="headerlink" title="4.5.更改默认的提交行为"></a>4.5.更改默认的提交行为</h4><p>正如所述，默认的 MySQL 行为是自动提交所有更改。换句话说，任何时候你执行一条 MySQL 语句，该语句实际上都是针对表执行的，而且所做的更改立即生效。为指示 MySQL 不自动提交更改，需要使用以下语句：</p>
+<p><strong>SET autocommit = 0;</strong></p>
+<blockquote>
+<p><strong>标志位连接专用</strong><br><strong>autocommit</strong> 标志是针对每个连接而不是服务器。</p>
+</blockquote>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">-NOTE -DB</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2022/02/09/MySQL%E5%BF%85%E7%9F%A5%E5%BF%85%E4%BC%9A/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
   
     <article id="post-浅学JVM" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
@@ -1759,93 +2078,6 @@
 
 
   
-    <article id="post-Elastic-Search" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/09/28/Elastic-Search/">Elastic Search</a>
-    </h1>
-  
-
-		<!--显示阅读次数-->
-		
-		<!--显示阅读次数完毕-->
-        
-        <a href="/2021/09/28/Elastic-Search/" class="archive-article-date">
-  	<time datetime="2021-09-28T15:58:43.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-09-28</time>
-</a>
-
-
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Elastic[ɪˈlæstɪk] Stack  的核心</p>
-<ul>
-<li><p>Elasticsearch 是一个分布式、RESTful 风格的搜索和数据分析引擎，能够解决不断涌现出的各种用例。</p>
-        
-          <a class="article-more-a" href="/2021/09/28/Elastic-Search/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">NOTE</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">SEARCH</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2021/09/28/Elastic-Search/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">Next &amp;raquo;</a>
@@ -1991,6 +2223,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">JVM</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">-NOTE -DB</a>
               </li>
             
             <div class="clearfix"></div>
