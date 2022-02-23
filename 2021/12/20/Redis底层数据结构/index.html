@@ -8,12 +8,12 @@
   <link rel="dns-prefetch" href="http://example.com">
   <title>Redis底层数据结构 | nowinkey的小棉袄</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="学习一下 Redis 6.0 的 10 种底层数据结构  一、简单动态字符串 (simple dynamic[daɪˈnæmɪk] string)1. SDS 的结构定义12345678struct sdshdr &amp;#123;    &#x2F;&#x2F; 记录 buf 数组中已使用字节的数量    int len;    &#x2F;&#x2F; 记录 buf 数组中未使用字节的数量    int free;    &#x2F;&#x2F; 字节数组">
+  <meta name="description" content="学习一下 Redis 6.0 的 10 种底层数据结构">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Redis底层数据结构">
 <meta property="og:url" content="http://example.com/2021/12/20/Redis%E5%BA%95%E5%B1%82%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/index.html">
 <meta property="og:site_name" content="nowinkey的小棉袄">
-<meta property="og:description" content="学习一下 Redis 6.0 的 10 种底层数据结构  一、简单动态字符串 (simple dynamic[daɪˈnæmɪk] string)1. SDS 的结构定义12345678struct sdshdr &amp;#123;    &#x2F;&#x2F; 记录 buf 数组中已使用字节的数量    int len;    &#x2F;&#x2F; 记录 buf 数组中未使用字节的数量    int free;    &#x2F;&#x2F; 字节数组">
+<meta property="og:description" content="学习一下 Redis 6.0 的 10 种底层数据结构">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/2021/12/20/Redis%E5%BA%95%E5%B1%82%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/4.png">
 <meta property="og:image" content="http://example.com/2021/12/20/Redis%E5%BA%95%E5%B1%82%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/6.png">
@@ -22,7 +22,7 @@
 <meta property="og:image" content="http://example.com/2021/12/20/Redis%E5%BA%95%E5%B1%82%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/9.png">
 <meta property="og:image" content="http://example.com/2021/12/20/Redis%E5%BA%95%E5%B1%82%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/10.png">
 <meta property="article:published_time" content="2021-12-20T05:23:41.000Z">
-<meta property="article:modified_time" content="2022-01-06T07:13:27.464Z">
+<meta property="article:modified_time" content="2022-02-23T11:39:04.108Z">
 <meta property="article:author" content="nowinkey">
 <meta property="article:tag" content="NOTE">
 <meta property="article:tag" content="DB">
@@ -73,7 +73,7 @@
 			</ul>
 		</nav>
 		<nav>
-			总文章数 15
+			总文章数 16
 		</nav>
 		<nav class="header-smart-menu">
     		
@@ -204,9 +204,9 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <blockquote>
-<p>学习一下 Redis 6.0 的 10 种底层数据结构</p>
-</blockquote>
+        <p>学习一下 Redis 6.0 的 10 种底层数据结构</p>
+<span id="more"></span>
+
 <h3 id="一、简单动态字符串-simple-dynamic-daɪˈnaemɪk-string"><a href="#一、简单动态字符串-simple-dynamic-daɪˈnaemɪk-string" class="headerlink" title="一、简单动态字符串 (simple dynamic[daɪˈnæmɪk] string)"></a>一、简单动态字符串 (simple dynamic[daɪˈnæmɪk] string)</h3><h4 id="1-SDS-的结构定义"><a href="#1-SDS-的结构定义" class="headerlink" title="1. SDS 的结构定义"></a>1. SDS 的结构定义</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">struct sdshdr &#123;</span><br><span class="line">    // 记录 buf 数组中已使用字节的数量</span><br><span class="line">    int len;</span><br><span class="line">    // 记录 buf 数组中未使用字节的数量</span><br><span class="line">    int free;</span><br><span class="line">    // 字节数组，用于保存字符串</span><br><span class="line">    char buf[];  // 以 &#x27;\0&#x27; 结尾</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 <hr>
 <h4 id="2-SDS-与-String-的区别"><a href="#2-SDS-与-String-的区别" class="headerlink" title="2. SDS 与 String 的区别"></a>2. SDS 与 String 的区别</h4><ul>
